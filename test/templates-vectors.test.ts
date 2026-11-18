@@ -104,3 +104,19 @@ describe.each(files)('%s', (file) => {
     }
   });
 });
+
+// Numbers are ranges, not verdicts: the template code and its vectors never
+// call a result good or wrong (the apps' rule; Mixtura checked this folder
+// before it moved here).
+test('no verdict words in the template code or vectors', () => {
+  const words = ['good', 'bad', 'wrong', 'balanced', 'verdict', 'ideal', 'perfect', 'correct'];
+  const base = fileURLToPath(new URL('../', import.meta.url));
+  const sources = ['src/templates', 'vectors/templates'].flatMap((folder) =>
+    readdirSync(`${base}${folder}`).map((f) => `${base}${folder}/${f}`),
+  );
+  expect(sources.length).toBeGreaterThan(5);
+  for (const f of sources) {
+    const text = readFileSync(f, 'utf8').toLowerCase();
+    for (const w of words) expect(text, `${f}: ${w}`).not.toMatch(new RegExp(`\\b${w}\\b`));
+  }
+});
