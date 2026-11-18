@@ -1,0 +1,43 @@
+{
+  "id": "renumber-lineages-independent",
+  "kind": "renumber",
+  "title": "Clashes in two lineages are independent: each lineage counts from its own highest number",
+  "versions": [
+    {
+      "id": "a1",
+      "lineageId": "A",
+      "version": 1,
+      "createdAt": "2026-11-18T10:00:00.000Z"
+    },
+    {
+      "id": "a2",
+      "lineageId": "A",
+      "version": 1,
+      "createdAt": "2026-11-18T10:05:00.000Z"
+    },
+    {
+      "id": "b4",
+      "lineageId": "B",
+      "version": 4,
+      "createdAt": "2026-11-18T10:00:00.000Z"
+    },
+    {
+      "id": "b4x",
+      "lineageId": "B",
+      "version": 4,
+      "createdAt": "2026-11-18T10:05:00.000Z"
+    }
+  ],
+  "expected": [
+    {
+      "id": "a2",
+      "from": 1,
+      "to": 2
+    },
+    {
+      "id": "b4x",
+      "from": 4,
+      "to": 5
+    }
+  ]
+}

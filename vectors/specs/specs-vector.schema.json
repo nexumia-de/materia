@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Vector for the specs module (docs/modules.md)",
+  "type": "object",
+  "required": ["id", "kind", "title", "expected"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "kind": { "enum": ["diff", "family", "cycles", "riff-change", "renumber"] },
+    "title": { "type": "string", "pattern": "." },
+    "versions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "lineageId", "version", "createdAt"],
+        "properties": {
+          "id": { "type": "string" },
+          "lineageId": { "type": "string" },
+          "version": { "type": "integer" },
+          "createdAt": { "type": "string" }
+        }
+      }
+    }
+  }
+}

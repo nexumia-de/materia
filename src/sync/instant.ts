@@ -7,7 +7,11 @@ import { dayNumber } from '../shelf/dates';
 const PATTERN = /^(\d{4}-\d{2}-\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?Z$/;
 const DAY_MS = 86_400_000;
 
-/** Milliseconds since an arbitrary origin for a UTC timestamp, or undefined when it is not one. */
+/**
+ * Converts a UTC timestamp to milliseconds since an arbitrary origin, enough to order two instants.
+ * @param text The candidate, `YYYY-MM-DDThh:mm:ss[.fff]Z`.
+ * @returns The milliseconds, or undefined when the value is not such a timestamp.
+ */
 export function instantMs(text: unknown): number | undefined {
   const m = typeof text === 'string' ? PATTERN.exec(text) : null;
   if (!m) return undefined;

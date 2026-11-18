@@ -75,6 +75,12 @@ test('the entry exports exactly the pinned values', () => {
       'parseDocument',
       'parseEnvelope',
       'planSync',
+      'buildUnit',
+      'parseUnit',
+      'planUnitSync',
+      'UNIT_FORMAT',
+      'UNIT_VERSION',
+      'renumberClashes',
     ].sort(),
   );
 });

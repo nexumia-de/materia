@@ -1,0 +1,37 @@
+{
+  "id": "renumber-unreadable-time-last",
+  "kind": "renumber",
+  "title": "An unreadable createdAt sorts last: it loses against a readable one, and two unreadable ones go by id",
+  "versions": [
+    {
+      "id": "m",
+      "lineageId": "A",
+      "version": 1,
+      "createdAt": "soon"
+    },
+    {
+      "id": "n",
+      "lineageId": "A",
+      "version": 1,
+      "createdAt": "2026-11-18T10:00:00.000Z"
+    },
+    {
+      "id": "o",
+      "lineageId": "A",
+      "version": 1,
+      "createdAt": ""
+    }
+  ],
+  "expected": [
+    {
+      "id": "m",
+      "from": 1,
+      "to": 2
+    },
+    {
+      "id": "o",
+      "from": 1,
+      "to": 3
+    }
+  ]
+}

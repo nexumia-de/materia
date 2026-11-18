@@ -2,12 +2,14 @@
 // (docs/sync.md#the-document). Parsing checks the frame; whether a single
 // record is valid is decided by the merge, which reports it as rejected.
 
-import { compareText, sortedValue } from './canonical';
 import { instantMs } from './instant';
+import { isObj, movedText, objects, parseMoved, recordsByKey, text } from './frame';
 import type { Place } from './places';
 import type { SyncRecord } from './records';
 
+/** The format name of a place document. */
 export const DOCUMENT_FORMAT = 'materia-place';
+/** The version of the place document this package reads and writes. */
 export const DOCUMENT_VERSION = 1;
 
 export interface PlaceDocument<V = unknown, E = unknown> {
@@ -23,18 +25,11 @@ export interface PlaceDocument<V = unknown, E = unknown> {
 
 export type DocumentError = 'not-json' | 'not-a-document' | 'newer-version' | 'invalid';
 
-type Obj = Record<string, unknown>;
-const isObj = (x: unknown): x is Obj => x !== null && typeof x === 'object' && !Array.isArray(x);
-const text = (x: unknown): x is string => typeof x === 'string' && x !== '';
-const objects = (x: unknown): x is Obj[] => Array.isArray(x) && x.every(isObj);
-
-function parseMoved(x: unknown): PlaceDocument['moved'] | 'bad' {
-  if (!isObj(x) || instantMs(x.at) === undefined) return 'bad';
-  if (x.note !== undefined && typeof x.note !== 'string') return 'bad';
-  return x.note === undefined ? { at: x.at as string } : { at: x.at as string, note: x.note };
-}
-
-/** Parses the plain text; unknown top-level fields are ignored. */
+/**
+ * Parses the plain text; unknown top-level fields are ignored.
+ * @param json The decrypted text.
+ * @returns The place document, or the first problem found.
+ */
 export function parseDocument(
   json: string,
 ): { ok: true; document: PlaceDocument } | { ok: false; error: DocumentError } {
@@ -69,33 +64,25 @@ export function parseDocument(
   };
   if (raw.moved !== undefined) {
     const moved = parseMoved(raw.moved);
-    if (moved === 'bad' || moved === undefined) return { ok: false, error: 'invalid' };
+    if (moved === 'bad') return { ok: false, error: 'invalid' };
     doc.moved = moved;
   }
   return { ok: true, document: doc };
 }
 
-const clean = (r: SyncRecord): unknown => ({
-  key: r.key,
-  updatedAt: r.updatedAt,
-  ...(r.deleted === true ? { deleted: true } : {}),
-  ...(r.value === undefined ? {} : { value: sortedValue(r.value) }),
-});
-
-const byKey = (list: readonly SyncRecord[]): unknown[] =>
-  [...list].sort((a, b) => compareText(String(a.key), String(b.key))).map(clean);
-
-/** The stable text: fixed key order, records and entities sorted by key, values with sorted keys. */
+/**
+ * Writes the stable text: fixed key order, records and entities sorted by key, values with sorted keys.
+ * @param doc The place document.
+ * @returns The compact JSON text.
+ */
 export function buildDocument(doc: PlaceDocument): string {
   const { place, moved } = doc;
   return JSON.stringify({
     format: DOCUMENT_FORMAT,
     version: DOCUMENT_VERSION,
     place: { id: place.id, name: place.name, updatedAt: place.updatedAt },
-    records: byKey(doc.records),
-    entities: byKey(doc.entities),
-    ...(moved
-      ? { moved: { at: moved.at, ...(moved.note === undefined ? {} : { note: moved.note }) } }
-      : {}),
+    records: recordsByKey(doc.records),
+    entities: recordsByKey(doc.entities),
+    ...(moved ? { moved: movedText(moved) } : {}),
   });
 }

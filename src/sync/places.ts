@@ -24,7 +24,12 @@ function placeWinner(a: Place, b: Place): Place {
 const equal = (a: Place, b: Place): boolean =>
   a.id === b.id && a.name === b.name && a.updatedAt === b.updatedAt;
 
-/** Merges two copies of one place (the id is the local one); newest name wins, ties as for records. */
+/**
+ * Merges two copies of one place (the id is the local one); newest name wins, ties as for records.
+ * @param local The local copy.
+ * @param remote The remote copy.
+ * @returns The merged place and whether each side differs from it.
+ */
 export function mergePlace(
   local: Place,
   remote: Place,
@@ -46,6 +51,9 @@ export interface CombinedEntry<V> {
  * live record of, one entry with the holders in the order of `ticked`
  * (a repeated id counts once, an unknown id holds nothing). Tombstones,
  * invalid records and unticked places do not count. Entries sorted by key.
+ * @param byPlace A plain object from place id to that place's records.
+ * @param ticked The place ids to combine, in the order of the holders.
+ * @returns One entry per key held live by at least one ticked place.
  */
 export function combinePlaces<V>(
   byPlace: Record<string, readonly SyncRecord<V>[]>,

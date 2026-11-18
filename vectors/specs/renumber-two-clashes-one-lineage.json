@@ -1,0 +1,43 @@
+{
+  "id": "renumber-two-clashes-one-lineage",
+  "kind": "renumber",
+  "title": "Clashes on two numbers of one lineage: the losers get numbers in order of createdAt across both clashes",
+  "versions": [
+    {
+      "id": "a",
+      "lineageId": "A",
+      "version": 1,
+      "createdAt": "2026-11-18T10:00:00.000Z"
+    },
+    {
+      "id": "b",
+      "lineageId": "A",
+      "version": 1,
+      "createdAt": "2026-11-18T10:10:00.000Z"
+    },
+    {
+      "id": "c",
+      "lineageId": "A",
+      "version": 2,
+      "createdAt": "2026-11-18T10:00:00.000Z"
+    },
+    {
+      "id": "d",
+      "lineageId": "A",
+      "version": 2,
+      "createdAt": "2026-11-18T10:05:00.000Z"
+    }
+  ],
+  "expected": [
+    {
+      "id": "d",
+      "from": 2,
+      "to": 3
+    },
+    {
+      "id": "b",
+      "from": 1,
+      "to": 4
+    }
+  ]
+}

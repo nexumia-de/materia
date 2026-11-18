@@ -1,0 +1,26 @@
+{
+  "id": "renumber-compares-instants",
+  "kind": "renumber",
+  "title": "Instants are compared as times, not as text: 10:00:00Z is earlier than 10:00:00.5Z although the text sorts after",
+  "versions": [
+    {
+      "id": "p",
+      "lineageId": "A",
+      "version": 1,
+      "createdAt": "2026-11-18T10:00:00.5Z"
+    },
+    {
+      "id": "q",
+      "lineageId": "A",
+      "version": 1,
+      "createdAt": "2026-11-18T10:00:00Z"
+    }
+  ],
+  "expected": [
+    {
+      "id": "p",
+      "from": 1,
+      "to": 2
+    }
+  ]
+}
