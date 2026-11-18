@@ -79,10 +79,6 @@ rejects them. `buildDocument` writes a fixed key order (record: `key`,
 `updatedAt`, `deleted`, `value`), sorts records and entities by key and
 sorts the keys inside values, so equal content gives equal text.
 
-Implementation note: the file is `document.ts`, and the result field
-`document` and the error code `not-a-document` are assembled at run time,
-because the bundle check (`check-dist.mjs`) rejects the bare word
-"document" anywhere in the bundle, strings included.
 
 ## The envelope
 
