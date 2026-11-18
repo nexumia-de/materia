@@ -79,7 +79,6 @@ rejects them. `buildDocument` writes a fixed key order (record: `key`,
 `updatedAt`, `deleted`, `value`), sorts records and entities by key and
 sorts the keys inside values, so equal content gives equal text.
 
-
 ## The envelope
 
 The file as stored (`buildEnvelope`, `parseEnvelope`):
