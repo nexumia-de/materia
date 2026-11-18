@@ -1,0 +1,182 @@
+{
+  "id": "expiry-states",
+  "kind": "expiry",
+  "description": "Made 2026-11-01 with a shelf life of 14 days: use-by 2026-11-15. Fresh until 3 days before, use soon from 2 days before through the use-by day, past from the day after.",
+  "cases": [
+    {
+      "name": "fresh, 13 days left",
+      "input": {
+        "madeOn": "2026-11-01",
+        "today": "2026-11-02",
+        "shelfLifeDays": 14
+      },
+      "expected": {
+        "status": "fresh",
+        "useBy": "2026-11-15",
+        "daysLeft": 13
+      }
+    },
+    {
+      "name": "fresh, 3 days left is just outside the window",
+      "input": {
+        "madeOn": "2026-11-01",
+        "today": "2026-11-12",
+        "shelfLifeDays": 14
+      },
+      "expected": {
+        "status": "fresh",
+        "useBy": "2026-11-15",
+        "daysLeft": 3
+      }
+    },
+    {
+      "name": "use soon, 2 days left",
+      "input": {
+        "madeOn": "2026-11-01",
+        "today": "2026-11-13",
+        "shelfLifeDays": 14
+      },
+      "expected": {
+        "status": "use-soon",
+        "useBy": "2026-11-15",
+        "daysLeft": 2
+      }
+    },
+    {
+      "name": "use soon on the use-by day itself",
+      "input": {
+        "madeOn": "2026-11-01",
+        "today": "2026-11-15",
+        "shelfLifeDays": 14
+      },
+      "expected": {
+        "status": "use-soon",
+        "useBy": "2026-11-15",
+        "daysLeft": 0
+      }
+    },
+    {
+      "name": "past the day after",
+      "input": {
+        "madeOn": "2026-11-01",
+        "today": "2026-11-16",
+        "shelfLifeDays": 14
+      },
+      "expected": {
+        "status": "past",
+        "useBy": "2026-11-15",
+        "daysLeft": -1
+      }
+    },
+    {
+      "name": "past, long after",
+      "input": {
+        "madeOn": "2026-11-01",
+        "today": "2026-12-31",
+        "shelfLifeDays": 14
+      },
+      "expected": {
+        "status": "past",
+        "useBy": "2026-11-15",
+        "daysLeft": -46
+      }
+    },
+    {
+      "name": "the window is a parameter: 0 days, 1 day left is fresh",
+      "input": {
+        "madeOn": "2026-11-01",
+        "today": "2026-11-14",
+        "shelfLifeDays": 14,
+        "soonDays": 0
+      },
+      "expected": {
+        "status": "fresh",
+        "useBy": "2026-11-15",
+        "daysLeft": 1
+      }
+    },
+    {
+      "name": "the window is a parameter: 0 days, the use-by day is use soon",
+      "input": {
+        "madeOn": "2026-11-01",
+        "today": "2026-11-15",
+        "shelfLifeDays": 14,
+        "soonDays": 0
+      },
+      "expected": {
+        "status": "use-soon",
+        "useBy": "2026-11-15",
+        "daysLeft": 0
+      }
+    },
+    {
+      "name": "a wider window of 5 days",
+      "input": {
+        "madeOn": "2026-11-01",
+        "today": "2026-11-10",
+        "shelfLifeDays": 14,
+        "soonDays": 5
+      },
+      "expected": {
+        "status": "use-soon",
+        "useBy": "2026-11-15",
+        "daysLeft": 5
+      }
+    },
+    {
+      "name": "shelf life 0: made today is use soon",
+      "input": {
+        "madeOn": "2026-11-17",
+        "today": "2026-11-17",
+        "shelfLifeDays": 0
+      },
+      "expected": {
+        "status": "use-soon",
+        "useBy": "2026-11-17",
+        "daysLeft": 0
+      }
+    },
+    {
+      "name": "shelf life 0: the next day is past",
+      "input": {
+        "madeOn": "2026-11-17",
+        "today": "2026-11-18",
+        "shelfLifeDays": 0
+      },
+      "expected": {
+        "status": "past",
+        "useBy": "2026-11-17",
+        "daysLeft": -1
+      }
+    },
+    {
+      "name": "made on a day after today (the user's date is kept)",
+      "input": {
+        "madeOn": "2026-11-20",
+        "today": "2026-11-17",
+        "shelfLifeDays": 5
+      },
+      "expected": {
+        "status": "fresh",
+        "useBy": "2026-11-25",
+        "daysLeft": 8
+      }
+    },
+    {
+      "name": "the limiting ingredient is passed through",
+      "input": {
+        "madeOn": "2026-11-01",
+        "today": "2026-11-16",
+        "shelfLifeDays": 14,
+        "limitingId": "syrup"
+      },
+      "expected": {
+        "status": "past",
+        "useBy": "2026-11-15",
+        "daysLeft": -1,
+        "limitingId": "syrup"
+      }
+    }
+  ],
+  "source": "docs/non-alcoholic.md#shelf-life-with-entered-dates; dates are worked out on a calendar by hand; the use-soon window of 2 days is an assumption, unverified, and every shelf life is a synthetic number the user would enter, not drink data"
+}

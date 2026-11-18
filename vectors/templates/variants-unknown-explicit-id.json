@@ -1,0 +1,29 @@
+{
+  "id": "variants-unknown-explicit-id",
+  "kind": "variants",
+  "description": "An explicit id that names no template: reason no-template.",
+  "spec": {
+    "templateId": "nope",
+    "lines": [
+      {
+        "ingredientId": "alpha",
+        "amount": 30,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "spice",
+        "amount": 15,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "water",
+        "amount": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  "expected": {
+    "variants": [],
+    "reason": "no-template"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Stock vector",
+  "description": "A small fixture (ingredients and specs) and runs; each run gives a stock, options and the expected result, matched as a subset.",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "kind": { "enum": ["makeable", "unlock", "pairs"] },
+    "description": { "type": "string" },
+    "ingredients": { "type": "array", "minItems": 1, "items": { "type": "object" } },
+    "specs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "status": { "enum": ["draft", "on-menu", "retired"] },
+          "templateId": { "type": "string" },
+          "lines": { "type": "array", "minItems": 1, "items": { "type": "object" } }
+        },
+        "required": ["id", "lines"]
+      }
+    },
+    "runs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "stock": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ingredientId": { "type": "string" },
+                "present": { "type": "boolean" }
+              },
+              "required": ["ingredientId", "present"]
+            }
+          },
+          "options": {
+            "type": "object",
+            "properties": {
+              "mode": { "enum": ["strict", "with-substitutes"] },
+              "limit": { "type": "integer", "minimum": 1 },
+              "excludeStatuses": {
+                "type": "array",
+                "items": { "enum": ["draft", "on-menu", "retired"] }
+              }
+            },
+            "additionalProperties": false
+          },
+          "order": { "type": "array", "items": { "type": "string" } },
+          "expected": { "type": "object" }
+        },
+        "required": ["stock", "options", "expected"]
+      }
+    },
+    "source": { "type": "string" }
+  },
+  "required": ["id", "kind", "description", "ingredients", "specs", "runs", "source"],
+  "additionalProperties": false
+}

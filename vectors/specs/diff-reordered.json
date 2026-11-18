@@ -1,0 +1,56 @@
+{
+  "id": "diff-reordered",
+  "kind": "diff",
+  "title": "Reordered lines produce no difference",
+  "roles": {
+    "rum": "base",
+    "lime": "sour",
+    "syrup": "sweet",
+    "cognac": "base",
+    "lemon": "sour",
+    "honey": "sweet"
+  },
+  "before": {
+    "lines": [
+      {
+        "ingredientId": "rum",
+        "amount": 60,
+        "unit": "ml"
+      },
+      {
+        "ingredientId": "lime",
+        "amount": 22.5,
+        "unit": "ml"
+      },
+      {
+        "ingredientId": "syrup",
+        "amount": 15,
+        "unit": "ml"
+      }
+    ]
+  },
+  "after": {
+    "lines": [
+      {
+        "ingredientId": "syrup",
+        "amount": 15,
+        "unit": "ml"
+      },
+      {
+        "ingredientId": "rum",
+        "amount": 60,
+        "unit": "ml"
+      },
+      {
+        "ingredientId": "lime",
+        "amount": 22.5,
+        "unit": "ml"
+      }
+    ]
+  },
+  "expected": {
+    "empty": true,
+    "lines": [],
+    "fields": []
+  }
+}

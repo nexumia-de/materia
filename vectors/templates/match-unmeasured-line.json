@@ -1,0 +1,78 @@
+{
+  "id": "match-unmeasured-line",
+  "kind": "match",
+  "description": "The spice line is counted (unit count) and has no measure: its ratio is unmeasured and adds nothing to distance or offset. blend fits with distance 0; the offset comes from water alone: 15 against 30 is 1.5 parts, |1.5-2|/2 = 0.25. (mixup: unassigned spice +1, water 0.75 parts below its band +0.25 = 1.25.)",
+  "spec": {
+    "lines": [
+      {
+        "ingredientId": "alpha",
+        "amount": 30,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "spice",
+        "amount": 2,
+        "unit": "count"
+      },
+      {
+        "ingredientId": "water",
+        "amount": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  "expected": {
+    "chosen": {
+      "templateId": "blend",
+      "basis": "suggested",
+      "known": true
+    },
+    "candidates": [
+      {
+        "templateId": "blend",
+        "rank": 1,
+        "fits": true,
+        "distance": 0,
+        "offset": 0.25,
+        "ratios": [
+          {
+            "slotId": "main",
+            "status": "reference",
+            "parts": 3
+          },
+          {
+            "slotId": "accent",
+            "status": "unmeasured"
+          },
+          {
+            "slotId": "filler",
+            "status": "within",
+            "parts": 1.5
+          }
+        ],
+        "assignment": {
+          "fills": [
+            {
+              "slotId": "main",
+              "ml": 30
+            },
+            {
+              "slotId": "accent",
+              "unmeasured": "counted-without-volume"
+            },
+            {
+              "slotId": "filler",
+              "ml": 15
+            }
+          ]
+        }
+      },
+      {
+        "templateId": "mixup",
+        "rank": 2,
+        "fits": false,
+        "distance": 1.25
+      }
+    ]
+  }
+}

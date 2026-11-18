@@ -1,0 +1,41 @@
+{
+  "id": "match-variants-hidden-without-class",
+  "kind": "match",
+  "description": "Without a wanted class no variant is offered: only blend and mixup are candidates.",
+  "spec": {
+    "lines": [
+      {
+        "ingredientId": "alpha",
+        "amount": 30,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "spice",
+        "amount": 15,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "water",
+        "amount": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  "expected": {
+    "chosen": {
+      "templateId": "blend",
+      "basis": "suggested",
+      "known": true
+    },
+    "candidates": [
+      {
+        "templateId": "blend",
+        "rank": 1
+      },
+      {
+        "templateId": "mixup",
+        "rank": 2
+      }
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "id": "tree-cycle",
+  "kind": "tree-errors",
+  "description": "a > b > c > a (parentId runs a to c, c to b, b to a). The cycle is reported once, starting at its smallest id and closing on it, and the self-parent d is a cycle of its own. Levels are all type; a type below a type is legal (the tree keeps its source depth), so the cycles are the only errors.",
+  "ingredients": [
+    {
+      "id": "a",
+      "name": "A",
+      "level": "type",
+      "parentId": "c"
+    },
+    {
+      "id": "b",
+      "name": "B",
+      "level": "type",
+      "parentId": "a"
+    },
+    {
+      "id": "c",
+      "name": "C",
+      "level": "type",
+      "parentId": "b"
+    },
+    {
+      "id": "d",
+      "name": "D",
+      "level": "type",
+      "parentId": "d"
+    }
+  ],
+  "expected": {
+    "errors": [
+      {
+        "code": "cycle",
+        "ids": ["a", "c", "b", "a"]
+      },
+      {
+        "code": "cycle",
+        "ids": ["d", "d"]
+      }
+    ]
+  },
+  "source": "docs/data-model.md#ingredient (no cycles, checked by the engine)"
+}

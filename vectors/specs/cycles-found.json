@@ -1,0 +1,32 @@
+{
+  "id": "cycles-found",
+  "kind": "cycles",
+  "title": "Loops of riffs in imported data",
+  "specs": [
+    {
+      "id": "a1",
+      "lineageId": "A",
+      "version": 1,
+      "parentId": "b1"
+    },
+    {
+      "id": "b1",
+      "lineageId": "B",
+      "version": 1,
+      "parentId": "a1"
+    },
+    {
+      "id": "c1",
+      "lineageId": "C",
+      "version": 1,
+      "parentId": "a1"
+    },
+    {
+      "id": "self1",
+      "lineageId": "S",
+      "version": 1,
+      "parentId": "self1"
+    }
+  ],
+  "expected": [["A", "B"], ["S"]]
+}

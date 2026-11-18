@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Mixtura ingredient engine test vector",
+  "description": "One worked example of the ingredient model. kind selects the rule: inheritance, tree-errors, tree-queries, substitution, swap-candidates, prepared. ingredients is a flat list that validates against schemas/ingredient.schema.json; expected (or, for inheritance, queries with an expected each) holds what the engine must return. Prepared vectors also carry specs (lines in ml, solid sugar in g, optional addedWaterMl and yieldMl) and a tolerance.",
+  "type": "object",
+  "required": ["id", "kind", "description", "ingredients", "source"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "kind": {
+      "enum": [
+        "inheritance",
+        "tree-errors",
+        "tree-queries",
+        "substitution",
+        "swap-candidates",
+        "prepared"
+      ]
+    },
+    "description": { "type": "string" },
+    "ingredients": { "type": "array", "minItems": 1 },
+    "queries": { "type": "array", "minItems": 1 },
+    "specs": { "type": "object" },
+    "query": { "type": "string" },
+    "expected": { "type": "object" },
+    "tolerance": { "type": "number", "exclusiveMinimum": 0 },
+    "source": { "type": "string" }
+  }
+}

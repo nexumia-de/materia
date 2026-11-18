@@ -1,0 +1,431 @@
+{
+  "id": "makeable-prepared",
+  "kind": "makeable",
+  "description": "A prepared ingredient counts as available when stocked itself or when every part of its spec is available; with a part missing, the missing raw part is named, not the prepared ingredient.",
+  "ingredients": [
+    {
+      "id": "spirit",
+      "name": "spirit",
+      "level": "category",
+      "role": "base"
+    },
+    {
+      "id": "gin",
+      "name": "gin",
+      "level": "type",
+      "parentId": "spirit",
+      "substitutionClass": "gin-like"
+    },
+    {
+      "id": "gin-a",
+      "name": "gin-a",
+      "level": "product",
+      "parentId": "gin"
+    },
+    {
+      "id": "gin-b",
+      "name": "gin-b",
+      "level": "product",
+      "parentId": "gin"
+    },
+    {
+      "id": "vodka",
+      "name": "vodka",
+      "level": "type",
+      "parentId": "spirit",
+      "substitutionClass": "neutral"
+    },
+    {
+      "id": "vodka-a",
+      "name": "vodka-a",
+      "level": "product",
+      "parentId": "vodka"
+    },
+    {
+      "id": "amaro",
+      "name": "amaro",
+      "level": "type",
+      "parentId": "spirit",
+      "substitutionClass": "amaro"
+    },
+    {
+      "id": "amaro-a",
+      "name": "amaro-a",
+      "level": "product",
+      "parentId": "amaro"
+    },
+    {
+      "id": "vermouth",
+      "name": "vermouth",
+      "level": "category",
+      "role": "modifier",
+      "substitutionClass": "vermouth"
+    },
+    {
+      "id": "dry-vermouth",
+      "name": "dry-vermouth",
+      "level": "type",
+      "parentId": "vermouth"
+    },
+    {
+      "id": "dry-v-a",
+      "name": "dry-v-a",
+      "level": "product",
+      "parentId": "dry-vermouth"
+    },
+    {
+      "id": "dry-v-b",
+      "name": "dry-v-b",
+      "level": "product",
+      "parentId": "dry-vermouth"
+    },
+    {
+      "id": "sweet-vermouth",
+      "name": "sweet-vermouth",
+      "level": "type",
+      "parentId": "vermouth"
+    },
+    {
+      "id": "sweet-v-a",
+      "name": "sweet-v-a",
+      "level": "product",
+      "parentId": "sweet-vermouth"
+    },
+    {
+      "id": "citrus-juice",
+      "name": "citrus-juice",
+      "level": "category",
+      "role": "sour",
+      "substitutionClass": "citrus"
+    },
+    {
+      "id": "lemon-juice",
+      "name": "lemon-juice",
+      "level": "type",
+      "parentId": "citrus-juice"
+    },
+    {
+      "id": "lime-juice",
+      "name": "lime-juice",
+      "level": "type",
+      "parentId": "citrus-juice"
+    },
+    {
+      "id": "sweetener",
+      "name": "sweetener",
+      "level": "category",
+      "role": "sweet"
+    },
+    {
+      "id": "sugar",
+      "name": "sugar",
+      "level": "type",
+      "parentId": "sweetener"
+    },
+    {
+      "id": "simple-syrup",
+      "name": "simple-syrup",
+      "level": "type",
+      "parentId": "sweetener",
+      "prepared": {
+        "specId": "prep-simple-syrup",
+        "yield": {
+          "amount": 500,
+          "unit": "ml"
+        }
+      }
+    },
+    {
+      "id": "rich-syrup",
+      "name": "rich-syrup",
+      "level": "type",
+      "parentId": "sweetener",
+      "prepared": {
+        "specId": "prep-rich-syrup",
+        "yield": {
+          "amount": 500,
+          "unit": "ml"
+        }
+      }
+    },
+    {
+      "id": "water",
+      "name": "water",
+      "level": "category",
+      "role": "lengthener"
+    },
+    {
+      "id": "olive",
+      "name": "olive",
+      "level": "category",
+      "role": "accent"
+    },
+    {
+      "id": "fruit",
+      "name": "fruit",
+      "level": "category",
+      "role": "accent"
+    },
+    {
+      "id": "lime",
+      "name": "lime",
+      "level": "type",
+      "parentId": "fruit"
+    },
+    {
+      "id": "soda",
+      "name": "soda",
+      "level": "category",
+      "role": "lengthener"
+    },
+    {
+      "id": "bitters",
+      "name": "bitters",
+      "level": "category",
+      "role": "accent"
+    },
+    {
+      "id": "angostura",
+      "name": "angostura",
+      "level": "type",
+      "parentId": "bitters"
+    },
+    {
+      "id": "cyclic",
+      "name": "cyclic",
+      "level": "category",
+      "role": "modifier"
+    },
+    {
+      "id": "cyc-a",
+      "name": "cyc-a",
+      "level": "type",
+      "parentId": "cyclic",
+      "prepared": {
+        "specId": "prep-cyc-a",
+        "yield": {
+          "amount": 500,
+          "unit": "ml"
+        }
+      }
+    },
+    {
+      "id": "cyc-b",
+      "name": "cyc-b",
+      "level": "type",
+      "parentId": "cyclic",
+      "prepared": {
+        "specId": "prep-cyc-b",
+        "yield": {
+          "amount": 500,
+          "unit": "ml"
+        }
+      }
+    }
+  ],
+  "specs": [
+    {
+      "id": "sweet-gin",
+      "status": "on-menu",
+      "lines": [
+        {
+          "ingredientId": "gin-a",
+          "amount": 30,
+          "unit": "ml"
+        },
+        {
+          "ingredientId": "simple-syrup",
+          "amount": 15,
+          "unit": "ml"
+        }
+      ]
+    },
+    {
+      "id": "prep-simple-syrup",
+      "status": "on-menu",
+      "lines": [
+        {
+          "ingredientId": "sugar",
+          "amount": 100,
+          "unit": "g"
+        },
+        {
+          "ingredientId": "water",
+          "amount": 100,
+          "unit": "ml"
+        }
+      ]
+    },
+    {
+      "id": "prep-rich-syrup",
+      "status": "on-menu",
+      "lines": [
+        {
+          "ingredientId": "simple-syrup",
+          "amount": 100,
+          "unit": "ml"
+        },
+        {
+          "ingredientId": "sugar",
+          "amount": 50,
+          "unit": "g"
+        }
+      ]
+    },
+    {
+      "id": "prep-cyc-a",
+      "status": "on-menu",
+      "lines": [
+        {
+          "ingredientId": "cyc-b",
+          "amount": 30,
+          "unit": "ml"
+        }
+      ]
+    },
+    {
+      "id": "prep-cyc-b",
+      "status": "on-menu",
+      "lines": [
+        {
+          "ingredientId": "cyc-a",
+          "amount": 30,
+          "unit": "ml"
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "stock": [
+        {
+          "ingredientId": "gin-a",
+          "present": true
+        },
+        {
+          "ingredientId": "sugar",
+          "present": true
+        },
+        {
+          "ingredientId": "water",
+          "present": true
+        }
+      ],
+      "options": {},
+      "expected": {
+        "mode": "strict",
+        "specs": {
+          "sweet-gin": {
+            "status": "makeable",
+            "missing": [],
+            "lines": [
+              {
+                "rule": "exact",
+                "by": "gin-a"
+              },
+              {
+                "satisfied": true,
+                "rule": "prepared",
+                "by": "simple-syrup",
+                "parts": [
+                  {
+                    "rule": "exact",
+                    "by": "sugar"
+                  },
+                  {
+                    "rule": "exact",
+                    "by": "water"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "stock": [
+        {
+          "ingredientId": "gin-a",
+          "present": true
+        },
+        {
+          "ingredientId": "simple-syrup",
+          "present": true
+        }
+      ],
+      "options": {},
+      "expected": {
+        "mode": "strict",
+        "specs": {
+          "sweet-gin": {
+            "status": "makeable",
+            "missing": [],
+            "lines": [
+              {
+                "rule": "exact",
+                "by": "gin-a"
+              },
+              {
+                "rule": "exact",
+                "by": "simple-syrup"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "stock": [
+        {
+          "ingredientId": "gin-a",
+          "present": true
+        },
+        {
+          "ingredientId": "sugar",
+          "present": true
+        }
+      ],
+      "options": {},
+      "expected": {
+        "mode": "strict",
+        "specs": {
+          "sweet-gin": {
+            "status": "missing",
+            "missing": ["water"],
+            "lines": [
+              {
+                "rule": "exact",
+                "by": "gin-a"
+              },
+              {
+                "satisfied": false,
+                "reason": "not-in-stock",
+                "missing": ["water"]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "stock": [
+        {
+          "ingredientId": "gin-a",
+          "present": true
+        }
+      ],
+      "options": {},
+      "expected": {
+        "mode": "strict",
+        "specs": {
+          "sweet-gin": {
+            "status": "missing",
+            "missing": ["sugar", "water"]
+          }
+        }
+      }
+    }
+  ],
+  "source": "synthetic fixture, expected values worked out by hand from docs/makeable.md"
+}

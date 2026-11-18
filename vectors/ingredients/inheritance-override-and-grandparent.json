@@ -1,0 +1,109 @@
+{
+  "id": "inheritance-override-and-grandparent",
+  "kind": "inheritance",
+  "description": "Synthetic values chosen to exercise the rule; they are not drink data. Tree spirit (category, role base, ABV 40, shelf life 3650) > whiskey (type, ABV 43) > rye (product). rye gets ABV 43 from whiskey (a child overrides its parent), role and shelf life from spirit (the grandparent supplies), and has no sugar anywhere above it: undefined with a reason. Cost is never inherited: whiskey has a cost, rye does not.",
+  "ingredients": [
+    {
+      "id": "spirit",
+      "name": "Spirit",
+      "level": "category",
+      "role": "base",
+      "abv": 40,
+      "shelfLifeDays": 3650
+    },
+    {
+      "id": "whiskey",
+      "name": "Whiskey",
+      "level": "type",
+      "parentId": "spirit",
+      "abv": 43,
+      "cost": {
+        "price": 20,
+        "currency": "EUR",
+        "quantity": {
+          "amount": 700,
+          "unit": "ml"
+        }
+      }
+    },
+    {
+      "id": "rye",
+      "name": "Rye",
+      "level": "product",
+      "parentId": "whiskey"
+    }
+  ],
+  "queries": [
+    {
+      "id": "rye",
+      "expected": {
+        "abv": {
+          "value": 43,
+          "from": "whiskey"
+        },
+        "role": {
+          "value": "base",
+          "from": "spirit"
+        },
+        "shelfLifeDays": {
+          "value": 3650,
+          "from": "spirit"
+        },
+        "sugar": {
+          "missing": "no ancestor of rye defines sugar"
+        },
+        "acid": {
+          "missing": "no ancestor of rye defines acid"
+        },
+        "substitutionClass": {
+          "missing": "no ancestor of rye defines substitutionClass"
+        },
+        "cost": {
+          "missing": "rye has no cost; cost is not inherited"
+        }
+      }
+    },
+    {
+      "id": "whiskey",
+      "expected": {
+        "abv": {
+          "value": 43,
+          "from": "whiskey"
+        },
+        "role": {
+          "value": "base",
+          "from": "spirit"
+        },
+        "cost": {
+          "value": {
+            "price": 20,
+            "currency": "EUR",
+            "quantity": {
+              "amount": 700,
+              "unit": "ml"
+            }
+          },
+          "from": "whiskey"
+        }
+      }
+    },
+    {
+      "id": "spirit",
+      "expected": {
+        "abv": {
+          "value": 40,
+          "from": "spirit"
+        }
+      }
+    },
+    {
+      "id": "nope",
+      "expected": {
+        "abv": {
+          "missing": "unknown ingredient nope"
+        }
+      }
+    }
+  ],
+  "source": "docs/data-model.md#ingredient (Inheritance): nearest ancestor first, the ingredient itself before its ancestors"
+}

@@ -1,0 +1,24 @@
+{
+  "id": "family-missing-grandparent",
+  "kind": "family",
+  "title": "The chain stops at a missing grandparent",
+  "specs": [
+    {
+      "id": "b1",
+      "lineageId": "B",
+      "version": 1,
+      "parentId": "gone"
+    },
+    {
+      "id": "c1",
+      "lineageId": "C",
+      "version": 1,
+      "parentId": "b1"
+    }
+  ],
+  "lineageId": "C",
+  "expected": {
+    "ancestors": ["B"],
+    "missingParent": "gone"
+  }
+}

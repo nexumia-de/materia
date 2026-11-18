@@ -1,0 +1,46 @@
+{
+  "id": "family-unknown-lineage",
+  "kind": "family",
+  "title": "An unknown drink has an empty family",
+  "specs": [
+    {
+      "id": "seed-daiquiri",
+      "lineageId": "seed-daiquiri",
+      "version": 1
+    },
+    {
+      "id": "a1",
+      "lineageId": "A",
+      "version": 1,
+      "parentId": "seed-daiquiri",
+      "createdAt": "2026-01-01"
+    },
+    {
+      "id": "a2",
+      "lineageId": "A",
+      "version": 2,
+      "parentId": "a1",
+      "createdAt": "2026-01-05"
+    },
+    {
+      "id": "b1",
+      "lineageId": "B",
+      "version": 1,
+      "parentId": "a2",
+      "createdAt": "2026-02-01"
+    },
+    {
+      "id": "c1",
+      "lineageId": "C",
+      "version": 1,
+      "parentId": "b1",
+      "createdAt": "2026-03-01"
+    }
+  ],
+  "lineageId": "nope",
+  "expected": {
+    "ancestors": [],
+    "siblings": [],
+    "children": []
+  }
+}

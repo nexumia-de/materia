@@ -1,0 +1,43 @@
+{
+  "id": "match-variant-other-class",
+  "kind": "match",
+  "description": "With the class zero wanted, blend-zero replaces blend and blend-lite is not offered.",
+  "spec": {
+    "lines": [
+      {
+        "ingredientId": "alpha",
+        "amount": 30,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "spice",
+        "amount": 15,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "water",
+        "amount": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  "expected": {
+    "chosen": {
+      "templateId": "blend-zero",
+      "basis": "suggested",
+      "known": true
+    },
+    "candidates": [
+      {
+        "templateId": "blend-zero",
+        "rank": 1,
+        "fits": true
+      },
+      {
+        "templateId": "mixup",
+        "rank": 2
+      }
+    ]
+  },
+  "wanted": "zero"
+}

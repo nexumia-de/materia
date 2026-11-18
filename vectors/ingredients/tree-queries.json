@@ -1,0 +1,154 @@
+{
+  "id": "tree-queries",
+  "kind": "tree-queries",
+  "description": "Ancestors (nearest first), descendants (breadth first, siblings by id), isA (an ingredient is its own ancestor) and tree distance (steps through the nearest common ancestor; two separate roots are 2 apart through a virtual root). bourbon to irish-blend: 2 steps up to spirit, 2 down = 4.",
+  "ingredients": [
+    {
+      "id": "spirit",
+      "name": "Spirit",
+      "level": "category",
+      "role": "base"
+    },
+    {
+      "id": "whiskey",
+      "name": "Whiskey",
+      "level": "type",
+      "parentId": "spirit",
+      "substitutionClass": "whiskey"
+    },
+    {
+      "id": "bourbon",
+      "name": "Bourbon",
+      "level": "product",
+      "parentId": "whiskey"
+    },
+    {
+      "id": "rye",
+      "name": "Rye",
+      "level": "product",
+      "parentId": "whiskey"
+    },
+    {
+      "id": "scotch",
+      "name": "Scotch",
+      "level": "product",
+      "parentId": "whiskey"
+    },
+    {
+      "id": "irish-whiskey",
+      "name": "Irish whiskey",
+      "level": "type",
+      "parentId": "spirit",
+      "substitutionClass": "whiskey"
+    },
+    {
+      "id": "irish-blend",
+      "name": "Irish blend",
+      "level": "product",
+      "parentId": "irish-whiskey"
+    },
+    {
+      "id": "rum",
+      "name": "Rum",
+      "level": "type",
+      "parentId": "spirit",
+      "substitutionClass": "rum"
+    },
+    {
+      "id": "liqueur",
+      "name": "Liqueur",
+      "level": "category",
+      "role": "sweet"
+    },
+    {
+      "id": "honey-whiskey-liqueur",
+      "name": "Honey whiskey liqueur",
+      "level": "type",
+      "parentId": "liqueur",
+      "substitutionClass": "whiskey"
+    },
+    {
+      "id": "mystery",
+      "name": "Mystery",
+      "level": "category",
+      "substitutionClass": "rum"
+    }
+  ],
+  "expected": {
+    "ancestors": {
+      "bourbon": ["whiskey", "spirit"],
+      "spirit": [],
+      "nope": null
+    },
+    "descendants": {
+      "spirit": ["irish-whiskey", "rum", "whiskey", "irish-blend", "bourbon", "rye", "scotch"],
+      "rye": [],
+      "nope": null
+    },
+    "isA": [
+      {
+        "child": "bourbon",
+        "ancestor": "spirit",
+        "result": true
+      },
+      {
+        "child": "bourbon",
+        "ancestor": "bourbon",
+        "result": true
+      },
+      {
+        "child": "spirit",
+        "ancestor": "bourbon",
+        "result": false
+      },
+      {
+        "child": "rye",
+        "ancestor": "irish-whiskey",
+        "result": false
+      },
+      {
+        "child": "nope",
+        "ancestor": "spirit",
+        "result": false
+      },
+      {
+        "child": "spirit",
+        "ancestor": "nope",
+        "result": false
+      }
+    ],
+    "distance": [
+      {
+        "a": "bourbon",
+        "b": "bourbon",
+        "result": 0
+      },
+      {
+        "a": "bourbon",
+        "b": "rye",
+        "result": 2
+      },
+      {
+        "a": "bourbon",
+        "b": "whiskey",
+        "result": 1
+      },
+      {
+        "a": "bourbon",
+        "b": "irish-blend",
+        "result": 4
+      },
+      {
+        "a": "spirit",
+        "b": "liqueur",
+        "result": 2
+      },
+      {
+        "a": "bourbon",
+        "b": "nope",
+        "result": null
+      }
+    ]
+  },
+  "source": "docs/data-model.md#ingredient"
+}

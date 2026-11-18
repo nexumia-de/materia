@@ -1,0 +1,40 @@
+{
+  "id": "match-explicit-template-kept",
+  "kind": "match",
+  "description": "The spec names mixup although its lines fit blend perfectly: an explicit id is never overridden. Only mixup is evaluated (spice is unassigned, distance 1) and chosen stays mixup. (mixup: unassigned spice +1, water 0.75 parts below its band +0.25 = 1.25.)",
+  "spec": {
+    "templateId": "mixup",
+    "lines": [
+      {
+        "ingredientId": "alpha",
+        "amount": 30,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "spice",
+        "amount": 15,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "water",
+        "amount": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  "expected": {
+    "chosen": {
+      "templateId": "mixup",
+      "basis": "explicit",
+      "known": true
+    },
+    "candidates": [
+      {
+        "templateId": "mixup",
+        "rank": 1,
+        "fits": false,
+        "distance": 1.25
+      }
+    ]
+  }
+}

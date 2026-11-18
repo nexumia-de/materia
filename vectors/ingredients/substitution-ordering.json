@@ -1,0 +1,130 @@
+{
+  "id": "substitution-ordering",
+  "kind": "substitution",
+  "description": "Substitutes of bourbon: class whiskey (inherited from whiskey) and role base (inherited from spirit). Candidates rye and scotch (distance 2, ordered by id), irish-whiskey (3), irish-blend (4). Left out: bourbon itself, its ancestors whiskey and spirit, honey-whiskey-liqueur (same class, role sweet), rum (other class). spirit has no class and mystery has a class but no role: empty lists with a reason, nothing guessed. rum has no partner (mystery has its class but no role, so it does not match): empty without a reason. irish-blend: whiskey (3), then bourbon, rye, scotch (4, by id).",
+  "ingredients": [
+    {
+      "id": "spirit",
+      "name": "Spirit",
+      "level": "category",
+      "role": "base"
+    },
+    {
+      "id": "whiskey",
+      "name": "Whiskey",
+      "level": "type",
+      "parentId": "spirit",
+      "substitutionClass": "whiskey"
+    },
+    {
+      "id": "bourbon",
+      "name": "Bourbon",
+      "level": "product",
+      "parentId": "whiskey"
+    },
+    {
+      "id": "rye",
+      "name": "Rye",
+      "level": "product",
+      "parentId": "whiskey"
+    },
+    {
+      "id": "scotch",
+      "name": "Scotch",
+      "level": "product",
+      "parentId": "whiskey"
+    },
+    {
+      "id": "irish-whiskey",
+      "name": "Irish whiskey",
+      "level": "type",
+      "parentId": "spirit",
+      "substitutionClass": "whiskey"
+    },
+    {
+      "id": "irish-blend",
+      "name": "Irish blend",
+      "level": "product",
+      "parentId": "irish-whiskey"
+    },
+    {
+      "id": "rum",
+      "name": "Rum",
+      "level": "type",
+      "parentId": "spirit",
+      "substitutionClass": "rum"
+    },
+    {
+      "id": "liqueur",
+      "name": "Liqueur",
+      "level": "category",
+      "role": "sweet"
+    },
+    {
+      "id": "honey-whiskey-liqueur",
+      "name": "Honey whiskey liqueur",
+      "level": "type",
+      "parentId": "liqueur",
+      "substitutionClass": "whiskey"
+    },
+    {
+      "id": "mystery",
+      "name": "Mystery",
+      "level": "category",
+      "substitutionClass": "rum"
+    }
+  ],
+  "expected": {
+    "substitutesFor": {
+      "bourbon": {
+        "ids": ["rye", "scotch", "irish-whiskey", "irish-blend"]
+      },
+      "irish-blend": {
+        "ids": ["whiskey", "bourbon", "rye", "scotch"]
+      },
+      "rum": {
+        "ids": []
+      },
+      "spirit": {
+        "ids": [],
+        "reason": "no ancestor of spirit defines substitutionClass"
+      },
+      "mystery": {
+        "ids": [],
+        "reason": "no ancestor of mystery defines role"
+      },
+      "nope": {
+        "ids": [],
+        "reason": "unknown ingredient nope"
+      }
+    },
+    "sameClass": [
+      {
+        "a": "bourbon",
+        "b": "irish-blend",
+        "result": true
+      },
+      {
+        "a": "bourbon",
+        "b": "honey-whiskey-liqueur",
+        "result": true
+      },
+      {
+        "a": "bourbon",
+        "b": "rum",
+        "result": false
+      },
+      {
+        "a": "spirit",
+        "b": "whiskey",
+        "result": false
+      },
+      {
+        "a": "spirit",
+        "b": "spirit",
+        "result": false
+      }
+    ]
+  },
+  "source": "docs/data-model.md#ingredient (substitutionClass, role are inherited)"
+}

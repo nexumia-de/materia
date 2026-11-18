@@ -1,0 +1,73 @@
+{
+  "id": "expiry-calendar",
+  "kind": "expiry",
+  "description": "Date arithmetic across month ends, a leap day and a year end. 2026-01-31 plus 30 days: 28 days to 2026-02-28 and 2 more is 2026-03-02. 2028 is a leap year: 2028-02-28 plus 2 days is 2028-03-01. 2026-12-30 plus 3 days is 2027-01-02.",
+  "cases": [
+    {
+      "name": "month end into March in a common year",
+      "input": {
+        "madeOn": "2026-01-31",
+        "today": "2026-03-01",
+        "shelfLifeDays": 30
+      },
+      "expected": {
+        "status": "use-soon",
+        "useBy": "2026-03-02",
+        "daysLeft": 1
+      }
+    },
+    {
+      "name": "leap day exists in 2028",
+      "input": {
+        "madeOn": "2028-02-28",
+        "today": "2028-02-29",
+        "shelfLifeDays": 2
+      },
+      "expected": {
+        "status": "use-soon",
+        "useBy": "2028-03-01",
+        "daysLeft": 1
+      }
+    },
+    {
+      "name": "no leap day in 2027",
+      "input": {
+        "madeOn": "2027-02-27",
+        "today": "2027-03-01",
+        "shelfLifeDays": 2
+      },
+      "expected": {
+        "status": "use-soon",
+        "useBy": "2027-03-01",
+        "daysLeft": 0
+      }
+    },
+    {
+      "name": "across the year end, 1 day left",
+      "input": {
+        "madeOn": "2026-12-30",
+        "today": "2027-01-01",
+        "shelfLifeDays": 3
+      },
+      "expected": {
+        "status": "use-soon",
+        "useBy": "2027-01-02",
+        "daysLeft": 1
+      }
+    },
+    {
+      "name": "a long shelf life across a year",
+      "input": {
+        "madeOn": "2026-11-17",
+        "today": "2027-11-17",
+        "shelfLifeDays": 365
+      },
+      "expected": {
+        "status": "use-soon",
+        "useBy": "2027-11-17",
+        "daysLeft": 0
+      }
+    }
+  ],
+  "source": "docs/non-alcoholic.md#shelf-life-with-entered-dates; dates are worked out on a calendar by hand; the use-soon window of 2 days is an assumption, unverified, and every shelf life is a synthetic number the user would enter, not drink data"
+}

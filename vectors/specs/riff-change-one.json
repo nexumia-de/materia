@@ -1,0 +1,9 @@
+{
+  "id": "riff-change-one",
+  "kind": "riff-change",
+  "title": "One change",
+  "diffFrom": "diff-swapped-ingredient",
+  "expected": {
+    "count": 1
+  }
+}

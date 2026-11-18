@@ -1,0 +1,28 @@
+{
+  "id": "variants-no-template",
+  "kind": "variants",
+  "description": "The spec fits no template (spice too high) and names none: reason no-template, no templateId.",
+  "spec": {
+    "lines": [
+      {
+        "ingredientId": "alpha",
+        "amount": 30,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "spice",
+        "amount": 60,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "water",
+        "amount": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  "expected": {
+    "variants": [],
+    "reason": "no-template"
+  }
+}

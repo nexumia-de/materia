@@ -1,0 +1,24 @@
+# Weekly pull requests for new versions of npm packages and GitHub
+# Actions; every version is pinned exactly (phosh-toolkit
+# docs/dependency-updates.md).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    versioning-strategy: increase
+    ignore:
+      # Node types follow the Node version in .nvmrc (22).
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
+    groups:
+      dev-dependencies:
+        dependency-type: development
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ['*']

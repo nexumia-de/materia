@@ -1,0 +1,42 @@
+{
+  "id": "tree-level-order",
+  "kind": "tree-errors",
+  "description": "A product has no children, and a category is always a root. A type below a type is allowed (vector tree-deep).",
+  "ingredients": [
+    {
+      "id": "rye",
+      "name": "Rye",
+      "level": "product"
+    },
+    {
+      "id": "spirit",
+      "name": "Spirit",
+      "level": "type",
+      "parentId": "rye"
+    },
+    {
+      "id": "whiskey",
+      "name": "Whiskey",
+      "level": "type"
+    },
+    {
+      "id": "shelf",
+      "name": "Shelf",
+      "level": "category",
+      "parentId": "whiskey"
+    }
+  ],
+  "expected": {
+    "errors": [
+      {
+        "code": "level-order",
+        "ids": ["shelf", "whiskey"]
+      },
+      {
+        "code": "level-order",
+        "ids": ["spirit", "rye"]
+      }
+    ]
+  },
+  "source": "docs/data-model.md#ingredient"
+}

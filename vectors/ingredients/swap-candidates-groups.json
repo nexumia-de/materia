@@ -1,0 +1,191 @@
+{
+  "id": "swap-candidates-groups",
+  "kind": "swap-candidates",
+  "description": "Swap candidates for a line on a synthetic tree. bourbon (class whiskey, role base from spirit): class group rye, scotch, irish-whiskey (the ancestors whiskey and spirit and bourbon itself are left out), then the role group of other classes by tree distance and id: gin (3), rum (3), light-rum (4); the categories spirit and liqueur are never offered there. A role set by the line replaces the ingredient's own: bourbon in a sweet slot has the class group honey-whiskey-liqueur (same class, role sweet), then the role group simple-syrup. light-rum has a role but no class: only the role group. A line without a role: charcoal (no class, no role) has the near group salt (a sibling); ice has no parent and so no neighbours and no group at all; mystery has class rum but no role, so its class group is every ingredient of that class (rum, light-rum) and no near group. Unknown id: no groups and a reason.",
+  "ingredients": [
+    {
+      "id": "spirit",
+      "name": "Spirit",
+      "level": "category",
+      "role": "base"
+    },
+    {
+      "id": "whiskey",
+      "name": "Whiskey",
+      "level": "type",
+      "parentId": "spirit",
+      "substitutionClass": "whiskey"
+    },
+    {
+      "id": "bourbon",
+      "name": "Bourbon",
+      "level": "product",
+      "parentId": "whiskey"
+    },
+    {
+      "id": "rye",
+      "name": "Rye",
+      "level": "product",
+      "parentId": "whiskey"
+    },
+    {
+      "id": "scotch",
+      "name": "Scotch",
+      "level": "product",
+      "parentId": "whiskey"
+    },
+    {
+      "id": "irish-whiskey",
+      "name": "Irish whiskey",
+      "level": "type",
+      "parentId": "spirit",
+      "substitutionClass": "whiskey"
+    },
+    {
+      "id": "rum",
+      "name": "Rum",
+      "level": "type",
+      "parentId": "spirit",
+      "substitutionClass": "rum"
+    },
+    {
+      "id": "light-rum",
+      "name": "Light rum",
+      "level": "product",
+      "parentId": "rum"
+    },
+    {
+      "id": "gin",
+      "name": "Gin",
+      "level": "type",
+      "parentId": "spirit"
+    },
+    {
+      "id": "liqueur",
+      "name": "Liqueur",
+      "level": "category",
+      "role": "sweet"
+    },
+    {
+      "id": "honey-whiskey-liqueur",
+      "name": "Honey whiskey liqueur",
+      "level": "type",
+      "parentId": "liqueur",
+      "substitutionClass": "whiskey"
+    },
+    {
+      "id": "simple-syrup",
+      "name": "Simple syrup",
+      "level": "product",
+      "parentId": "liqueur"
+    },
+    {
+      "id": "mystery",
+      "name": "Mystery",
+      "level": "category",
+      "substitutionClass": "rum"
+    },
+    {
+      "id": "additive",
+      "name": "Additive",
+      "level": "category"
+    },
+    {
+      "id": "charcoal",
+      "name": "Charcoal",
+      "level": "product",
+      "parentId": "additive"
+    },
+    {
+      "id": "salt",
+      "name": "Salt",
+      "level": "product",
+      "parentId": "additive"
+    },
+    {
+      "id": "ice",
+      "name": "Ice",
+      "level": "product"
+    }
+  ],
+  "source": "Synthetic: a rule of the engine, not drink data.",
+  "queries": [
+    {
+      "id": "bourbon",
+      "expected": {
+        "groups": [
+          {
+            "kind": "class",
+            "ids": ["rye", "scotch", "irish-whiskey"]
+          },
+          {
+            "kind": "role",
+            "ids": ["gin", "rum", "light-rum"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "bourbon",
+      "role": "sweet",
+      "expected": {
+        "groups": [
+          {
+            "kind": "class",
+            "ids": ["honey-whiskey-liqueur"]
+          },
+          {
+            "kind": "role",
+            "ids": ["simple-syrup"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "light-rum",
+      "expected": {
+        "groups": [
+          {
+            "kind": "role",
+            "ids": ["gin", "irish-whiskey", "whiskey", "bourbon", "rye", "scotch"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "charcoal",
+      "expected": {
+        "groups": [
+          {
+            "kind": "near",
+            "ids": ["salt"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ice",
+      "expected": {
+        "groups": []
+      }
+    },
+    {
+      "id": "mystery",
+      "expected": {
+        "groups": [
+          {
+            "kind": "class",
+            "ids": ["rum", "light-rum"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "nope",
+      "expected": {
+        "groups": [],
+        "reason": "unknown ingredient nope"
+      }
+    }
+  ]
+}

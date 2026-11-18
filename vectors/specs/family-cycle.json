@@ -1,0 +1,24 @@
+{
+  "id": "family-cycle",
+  "kind": "family",
+  "title": "A loop in the chain is reported and the chain stops",
+  "specs": [
+    {
+      "id": "a1",
+      "lineageId": "A",
+      "version": 1,
+      "parentId": "b1"
+    },
+    {
+      "id": "b1",
+      "lineageId": "B",
+      "version": 1,
+      "parentId": "a1"
+    }
+  ],
+  "lineageId": "A",
+  "expected": {
+    "ancestors": ["B"],
+    "cycle": ["A", "B"]
+  }
+}
