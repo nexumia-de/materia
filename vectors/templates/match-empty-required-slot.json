@@ -1,7 +1,7 @@
 {
   "id": "match-empty-required-slot",
   "kind": "match",
-  "description": "No spice line: the required accent slot is empty, which counts 1. blend has distance 1. mixup has main and filler (alpha 30, water 15 is 1.5 parts, inside 1-2) and fits with distance 0 and offset 0, so it is chosen.",
+  "description": "No spice line: the required accent slot is empty, which counts 1; water 30 is 3 parts, inside 1-3, so blend has distance 1. mixup has main and filler: its reference middle is 1.5 parts, water 30 against alpha 30 is 1.5 parts, inside 1-2: it fits with distance 0 and offset 0, so it is chosen.",
   "spec": {
     "lines": [
       {
@@ -11,7 +11,7 @@
       },
       {
         "ingredientId": "water",
-        "amount": 15,
+        "amount": 30,
         "unit": "g"
       }
     ]

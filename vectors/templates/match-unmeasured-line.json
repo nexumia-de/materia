@@ -1,7 +1,7 @@
 {
   "id": "match-unmeasured-line",
   "kind": "match",
-  "description": "The spice line is counted (unit count) and has no measure: its ratio is unmeasured and adds nothing to distance or offset. blend fits with distance 0; the offset comes from water alone: 15 against 30 is 1.5 parts, |1.5-2|/2 = 0.25.",
+  "description": "The spice line is counted (unit count) and has no measure: its ratio is unmeasured and adds nothing to distance or offset. blend fits with distance 0; the offset comes from water alone: 15 against 30 is 1.5 parts, |1.5-2|/2 = 0.25. (mixup: unassigned spice +1, water 0.75 parts below its band +0.25 = 1.25.)",
   "spec": {
     "lines": [
       {
@@ -66,6 +66,12 @@
             }
           ]
         }
+      },
+      {
+        "templateId": "mixup",
+        "rank": 2,
+        "fits": false,
+        "distance": 1.25
       }
     ]
   }

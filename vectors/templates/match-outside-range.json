@@ -1,7 +1,7 @@
 {
   "id": "match-outside-range",
   "kind": "match",
-  "description": "spice 60 against alpha 30 is 6 parts, above the band 1-2 by (6-2)/2 = 2: blend has distance 2 and does not fit. mixup has distance 1 (unassigned spice) and does not fit either, so it ranks first but nothing is chosen.",
+  "description": "spice 60 against alpha 30 is 6 parts, above the band 1-2 by (6-2)/2 = 2: blend has distance 2 and does not fit. mixup has distance 1.25 (unassigned spice, water 0.75 parts below 1-2) and does not fit either, so it ranks first but nothing is chosen.",
   "spec": {
     "lines": [
       {
@@ -27,7 +27,7 @@
         "templateId": "mixup",
         "rank": 1,
         "fits": false,
-        "distance": 1
+        "distance": 1.25
       },
       {
         "templateId": "blend",

@@ -1,7 +1,7 @@
 {
   "id": "match-variant-by-class",
   "kind": "match",
-  "description": "With the class lite wanted, blend-lite is offered in place of its parent blend (same slots, so both would tie); blend-zero is another class and not offered. The lines fit: blend-lite is chosen with distance 0 and offset 0.25, mixup ranks second.",
+  "description": "With the class lite wanted, blend-lite is offered in place of its parent blend (same slots, so both would tie); blend-zero is another class and not offered. The lines fit: blend-lite is chosen with distance 0 and offset 0.25, mixup ranks second. (mixup: unassigned spice +1, water 0.75 parts below its band +0.25 = 1.25.)",
   "spec": {
     "lines": [
       {
@@ -39,7 +39,7 @@
         "templateId": "mixup",
         "rank": 2,
         "fits": false,
-        "distance": 1
+        "distance": 1.25
       }
     ]
   },

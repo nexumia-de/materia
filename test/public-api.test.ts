@@ -14,7 +14,8 @@ const helpers = readdirSync(`${dir}helpers`)
 test.each([...tests, ...helpers])('%s imports the package from the entry point only', (f) => {
   const text = readFileSync(`${dir}${f}`, 'utf8');
   const imports = [...text.matchAll(/from '((?:\.\.\/)+src[^']*)'/g)].map((m) => m[1] as string);
-  if (f === 'purity.test.ts') return expect(imports).toEqual([]);
+  // purity.test.ts and the schema helper do not use the package.
+  if (f === 'purity.test.ts' || f === 'helpers/json-schema.ts') return expect(imports).toEqual([]);
   expect(imports.length, f).toBeGreaterThan(0);
   for (const path of imports) expect(path, f).toMatch(/^(\.\.\/)+src\/index$/);
 });

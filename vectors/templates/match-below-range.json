@@ -1,7 +1,7 @@
 {
   "id": "match-below-range",
   "kind": "match",
-  "description": "spice 6 against alpha 30 is 0.6 parts, below the band 1-2 by (1-0.6)/1 = 0.4: blend has distance 0.4.",
+  "description": "spice 6 against alpha 30 is 0.6 parts, below the band 1-2 by (1-0.6)/1 = 0.4: blend has distance 0.4. mixup: unassigned spice (+1) and water 0.75 parts below its band (+0.25), distance 1.25.",
   "spec": {
     "lines": [
       {
@@ -49,7 +49,7 @@
       {
         "templateId": "mixup",
         "rank": 2,
-        "distance": 1
+        "distance": 1.25
       }
     ]
   }

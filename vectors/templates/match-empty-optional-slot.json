@@ -1,7 +1,7 @@
 {
   "id": "match-empty-optional-slot",
   "kind": "match",
-  "description": "water is optional: left empty, its ratio is empty and costs nothing. spice 15 against alpha 30 is 1.5 parts, the middle of 1-2. blend fits with distance 0 and offset 0.",
+  "description": "water is optional: left empty, its ratio is empty and costs nothing. spice 15 against alpha 30 is 1.5 parts, the middle of 1-2. blend fits with distance 0 and offset 0. mixup has an empty required filler slot (+1) and an unassigned spice line (+1): distance 2.",
   "spec": {
     "lines": [
       {
@@ -49,6 +49,12 @@
           "emptyRequired": [],
           "emptyOptional": ["filler"]
         }
+      },
+      {
+        "templateId": "mixup",
+        "rank": 2,
+        "fits": false,
+        "distance": 2
       }
     ]
   }
