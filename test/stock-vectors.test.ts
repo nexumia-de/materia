@@ -10,7 +10,7 @@ import {
   missingOne,
   pairRanking,
   unlockRanking,
-  type Ingredient,
+  type BaseIngredient,
   type StockEntry,
   type StockOptions,
   type StockSpec,
@@ -32,7 +32,7 @@ interface Run {
 interface Vector {
   id: string;
   kind: 'makeable' | 'unlock' | 'pairs';
-  ingredients: Ingredient[];
+  ingredients: BaseIngredient[];
   specs: StockSpec[];
   runs: Run[];
 }

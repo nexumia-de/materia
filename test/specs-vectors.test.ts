@@ -9,6 +9,7 @@ import {
   findFamilyCycles,
   summariseRiff,
   type DiffDomain,
+  type DiffOptionsOf,
   type FamilySpec,
   type VersionLine,
   type VersionSpec,
@@ -35,7 +36,7 @@ const DOMAIN: DiffDomain<TestLine, TestSpec, string> = {
   ],
   amountKeys: ['topMl'],
 };
-const diffSpecs = (before: TestSpec, after: TestSpec, options = {}) =>
+const diffSpecs = (before: TestSpec, after: TestSpec, options: DiffOptionsOf<TestLine> = {}) =>
   diffVersions(before, after, options, DOMAIN);
 
 const dir = fileURLToPath(new URL('../vectors/specs/', import.meta.url));

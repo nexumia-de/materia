@@ -10,7 +10,7 @@ import {
   daysBetween,
   expiry,
   limitingShelfLife,
-  type Ingredient,
+  type BaseIngredient,
 } from '../src/index';
 import { validate } from './helpers/json-schema';
 
@@ -50,7 +50,7 @@ describe('shelf vectors', () => {
           test(c.name, () => expect(expiry(c.input)).toEqual(c.expected));
         }
       } else {
-        const built = buildTree(v.ingredients as Ingredient[]);
+        const built = buildTree(v.ingredients as BaseIngredient[]);
         if (!built.ok) throw new Error(built.errors.map((e) => e.message).join('; '));
         const specs = new Map(Object.entries(v.specs as Record<string, never>));
         for (const c of v.cases as { name: string; id: string; expected: unknown }[]) {

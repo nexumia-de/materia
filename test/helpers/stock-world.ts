@@ -2,7 +2,7 @@
 // prepared ingredients (cycles possible), specs with optional lines, listed
 // substitutes and unknown ingredients. The generator lives in the tests
 // only; the engine has no randomness.
-import type { Id, Ingredient, StockEntry, StockSpec } from '../../src/index';
+import type { Id, BaseIngredient, StockEntry, StockSpec } from '../../src/index';
 
 export function rng(seed: number): () => number {
   let a = seed >>> 0;
@@ -16,7 +16,7 @@ export function rng(seed: number): () => number {
 }
 
 export interface World {
-  ingredients: Ingredient[];
+  ingredients: BaseIngredient[];
   specs: StockSpec[];
   stocks: StockEntry[][];
 }
@@ -25,7 +25,7 @@ export function world(seed: number, size = { categories: 4, specs: 40, stocks: 4
   const r = rng(seed);
   const pick = <T>(list: readonly T[]): T => list[Math.floor(r() * list.length)] as T;
   const roles = ['base', 'modifier', 'sweet', 'sour'] as const;
-  const ingredients: Ingredient[] = [];
+  const ingredients: BaseIngredient[] = [];
   for (let c = 0; c < size.categories; c++) {
     const cat = `c${c}`;
     ingredients.push({

@@ -6,8 +6,8 @@ import {
   makeableSpecs,
   substitutesFor,
   type Id,
-  type Ingredient,
-  type IngredientTree,
+  type BaseIngredient,
+  type IngredientTreeOf,
   type PairResult,
   type SpecStatus,
   type StockEntry,
@@ -20,7 +20,7 @@ export const present = (...ids: Id[]): StockEntry[] =>
 
 /** Naive definition of makeable, written separately from the engine: true when every required line is satisfied. */
 export function naiveMakeable(
-  tree: IngredientTree,
+  tree: IngredientTreeOf,
   specs: readonly StockSpec[],
   stock: readonly StockEntry[],
   spec: StockSpec,
@@ -59,7 +59,7 @@ export function naiveMakeable(
 
 /** Specs makeable (status makeable, or with substitution when `mode` allows it) for a stock. */
 export function makeableIds(
-  tree: IngredientTree,
+  tree: IngredientTreeOf,
   specs: readonly StockSpec[],
   stock: readonly StockEntry[],
   mode: StockMode,
@@ -76,7 +76,7 @@ export function makeableIds(
 
 /** Brute force: the specs that become makeable when only `candidate` is added to the stock. */
 export function bruteUnlock(
-  tree: IngredientTree,
+  tree: IngredientTreeOf,
   specs: readonly StockSpec[],
   stock: readonly StockEntry[],
   candidate: Id,
@@ -90,7 +90,7 @@ export function bruteUnlock(
 
 /** All ingredients not present in the stock. */
 export function candidatesOf(
-  ingredients: readonly Ingredient[],
+  ingredients: readonly BaseIngredient[],
   stock: readonly StockEntry[],
 ): Id[] {
   const have = new Set(stock.filter((s) => s.present).map((s) => s.ingredientId));
@@ -99,7 +99,7 @@ export function candidatesOf(
 
 /** Brute force for a pair: what each ingredient unlocks alone, and what the two unlock together. */
 export function brutePair(
-  tree: IngredientTree,
+  tree: IngredientTreeOf,
   specs: readonly StockSpec[],
   stock: readonly StockEntry[],
   a: Id,
@@ -123,7 +123,7 @@ export function brutePair(
  * `pairs` limits which pairs of `candidates` are tried.
  */
 export function pairMismatches(
-  tree: IngredientTree,
+  tree: IngredientTreeOf,
   specs: readonly StockSpec[],
   stock: readonly StockEntry[],
   result: PairResult,
