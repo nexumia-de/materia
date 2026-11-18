@@ -12,18 +12,32 @@ materia is the part of Mixtura's engine that knows no drink rule. It
 was moved here on 2026-11-18 so that Culina can use it without copying
 it. Everything is a pure function over plain data.
 
-| Folder (`src/`) | What it does                                                                                                                                              |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ingredients/`  | The ingredient tree with levels, queries, cost, inherited properties, substitution classes, swap candidates, prepared ingredients with nesting and cycles |
-| `templates/`    | Templates with role slots: lines to slots by role, ratios of measured slots against a reference role, ranking, variants by a class                        |
-| `specs/`        | Versions of a spec: diff of two versions, families of riffs, cycles, the summary of what a riff changed                                                   |
-| `stock/`        | What the stock allows: makeable specs with substitution, missing one, which ingredient or pair unlocks the most                                           |
-| `shelf/`        | Whole-day calendar arithmetic, expiry states, the limiting shelf life of a prepared ingredient                                                            |
-| `sync/`         | Pure parts of stock sync: record merge with tombstones, places and the combined view, place document, envelope, storage port, plan ([sync](sync.md))      |
+| Folder (`src/`) | What it does                                                                                                                                                    |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ingredients/`  | The ingredient tree with levels, queries, cost, inherited properties, substitution classes, swap candidates, prepared ingredients with nesting and cycles       |
+| `templates/`    | Templates with role slots: lines to slots by role, ratios of measured slots against a reference role, ranking, variants by a class                              |
+| `specs/`        | Versions of a spec: diff of two versions, families of riffs, cycles, the summary of what a riff changed, renumbering of clashing version numbers                |
+| `stock/`        | What the stock allows: makeable specs with substitution, missing one, which ingredient or pair unlocks the most                                                 |
+| `shelf/`        | Whole-day calendar arithmetic, expiry states, the limiting shelf life of a prepared ingredient                                                                  |
+| `sync/`         | Pure parts of stock sync: record merge with tombstones, places and the combined view, place and unit documents, envelope, storage port, plans ([sync](sync.md)) |
 
 The folders import only each other; `src/index.ts` is the one public
 entry and the package's contract. `test/public-api.test.ts` pins its
 list of values.
+
+## Clashing version numbers
+
+Versions of one lineage are written once and never changed, but two
+devices can each create "version 4" while offline, so a merge can leave
+two records with different ids on one `(lineageId, version)`.
+`renumberClashes(versions)` takes `{ id, lineageId, version, createdAt }`
+and reports `{ id, from, to }` for every record that must change: the
+record created earlier (compared as instants; an unreadable `createdAt`
+sorts last; ties by id as text) keeps the number, the others get the
+numbers above the lineage's highest, in that order. Lineages are
+independent, the result does not depend on the input order, and applying
+it leaves no clash. It only reports; what else a spec holds (parent
+references, notes) is the app's to update.
 
 # What a domain passes in
 

@@ -1,7 +1,7 @@
 ---
 type: Specification
 title: Sync
-description: The pure parts of stock sync - the record merge and its rules, places and the combined view, the plain place document, the encrypted envelope, the storage adapter port and the plan of one sync cycle, with the stated limits.
+description: The pure parts of stock sync - the record merge and its rules, places and the combined view, the plain place document, the general unit document (place, library, profile), the encrypted envelope, the storage adapter port and the plans of one sync cycle, with the stated limits.
 tags: [sync, merge, format, api]
 generated: { by: claude-code/2.1.327, at: 2026-11-18 }
 ---
@@ -79,6 +79,39 @@ rejects them. `buildDocument` writes a fixed key order (record: `key`,
 `updatedAt`, `deleted`, `value`), sorts records and entities by key and
 sorts the keys inside values, so equal content gives equal text.
 
+## Unit documents
+
+Since 0.3.0 one document serves three kinds of synced unit
+(`parseUnit`, `buildUnit`, `src/sync/unit.ts`): a `place` (stock), a
+`library` (one person's or a group's collections of specs, templates,
+ingredients, affinities) and a `profile` (one person's devices:
+preferences and a key ring). All are shared and merged the same way.
+
+| Field         | Meaning                                                                          |
+| ------------- | -------------------------------------------------------------------------------- |
+| `format`      | `materia-unit` (`UNIT_FORMAT`)                                                   |
+| `version`     | `1` (`UNIT_VERSION`)                                                             |
+| `kind`        | `place`, `library` or `profile`                                                  |
+| `unit`        | `{ id, name, updatedAt }`, merged like a place                                   |
+| `collections` | object from collection name to `SyncRecord[]`; names match `/^[a-z][a-z0-9-]*$/` |
+| `moved`       | optional `{ at, note? }`, as for places                                          |
+
+`materia-place` stays as it is for places written by 0.2.0
+(`parseDocument`, `buildDocument`, `planSync` are unchanged); new code
+may use `materia-unit` with kind `place`, where the records of a place
+are a collection of the app's choosing.
+
+`parseUnit` errors: `not-json`; `not-a-unit` (not an object or another
+`format`); `newer-version` (a `version` number above 1, checked first);
+`unknown-kind` (a `kind` string other than the three; a missing or
+non-string kind is `invalid`); `invalid` (any other frame problem,
+including a bad collection name, a collection that is not an array of
+objects or a broken `moved`). Unknown top-level fields are ignored.
+Unknown collections are kept, so an older app carries a collection a
+newer app added through a merge and writes it back. `buildUnit` fixes
+the key order, sorts collection names and records by key and sorts the
+keys inside values.
+
 ## The envelope
 
 The file as stored (`buildEnvelope`, `parseEnvelope`):
@@ -130,6 +163,21 @@ are merged. The result:
 A remote document of another place id gives `{ error: 'other-place' }`.
 After a successful write and storing `local`, a second cycle finds
 nothing to do (a property test).
+
+## The unit plan
+
+`planUnitSync(local, remote)` is `planSync` over
+`{ kind, unit, collections }`. `unit` merges as `mergePlace` does; every
+collection present on either side merges with `mergeRecords`; a
+collection on one side only is kept, stored locally when only the remote
+has it and written when only the local side has it (an empty one too).
+The result has `local`, `localChanged`, `write?`, `moved?` and
+`rejected`, whose entries start with the collection name
+(`specs:local:abc`, `specs:remote:2`). Errors: `{ error: 'other-unit' }`
+when the ids differ, `{ error: 'other-kind' }` when the kinds differ. A
+remote marked moved gives the merged state and `moved`, no write. After
+a write and storing `local`, a second cycle finds nothing to do (a
+property test).
 
 ## Limits of this version
 
