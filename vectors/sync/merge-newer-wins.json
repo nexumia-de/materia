@@ -1,0 +1,163 @@
+{
+  "id": "merge-newer-wins",
+  "kind": "merge",
+  "description": "Rule 1: per key the later updatedAt wins, whether it is a value or a tombstone. Case 1: remote 10:05 beats local 10:00, so the remote value is merged; the local side must store it, the file needs nothing. Case 2: local value 10:05 beats remote 10:00, so only the file changes. Case 3: a newer tombstone beats an older value. Case 4: a newer value beats an older tombstone (the record comes back). Case 5: the same instant written with and without fractions is compared as time, so 10:05:00Z is later than 10:00:00.999Z.",
+  "source": "docs/sync.md",
+  "cases": [
+    {
+      "name": "remote newer",
+      "input": {
+        "local": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": 1
+          }
+        ],
+        "remote": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:05:00.000Z",
+            "value": 2
+          }
+        ]
+      },
+      "expected": {
+        "records": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:05:00.000Z",
+            "value": 2
+          }
+        ],
+        "changedLocal": ["a"],
+        "changedRemote": [],
+        "rejected": []
+      }
+    },
+    {
+      "name": "local newer",
+      "input": {
+        "local": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:05:00.000Z",
+            "value": 2
+          }
+        ],
+        "remote": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": 1
+          }
+        ]
+      },
+      "expected": {
+        "records": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:05:00.000Z",
+            "value": 2
+          }
+        ],
+        "changedLocal": [],
+        "changedRemote": ["a"],
+        "rejected": []
+      }
+    },
+    {
+      "name": "newer tombstone",
+      "input": {
+        "local": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": 1
+          }
+        ],
+        "remote": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:05:00.000Z",
+            "deleted": true
+          }
+        ]
+      },
+      "expected": {
+        "records": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:05:00.000Z",
+            "deleted": true
+          }
+        ],
+        "changedLocal": ["a"],
+        "changedRemote": [],
+        "rejected": []
+      }
+    },
+    {
+      "name": "newer value revives",
+      "input": {
+        "local": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "deleted": true
+          }
+        ],
+        "remote": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:05:00.000Z",
+            "value": "back"
+          }
+        ]
+      },
+      "expected": {
+        "records": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:05:00.000Z",
+            "value": "back"
+          }
+        ],
+        "changedLocal": ["a"],
+        "changedRemote": [],
+        "rejected": []
+      }
+    },
+    {
+      "name": "compared as time, not as text",
+      "input": {
+        "local": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.999Z",
+            "value": 1
+          }
+        ],
+        "remote": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:05:00Z",
+            "value": 2
+          }
+        ]
+      },
+      "expected": {
+        "records": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:05:00Z",
+            "value": 2
+          }
+        ],
+        "changedLocal": ["a"],
+        "changedRemote": [],
+        "rejected": []
+      }
+    }
+  ]
+}

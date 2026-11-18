@@ -19,6 +19,7 @@ it. Everything is a pure function over plain data.
 | `specs/`        | Versions of a spec: diff of two versions, families of riffs, cycles, the summary of what a riff changed                                                   |
 | `stock/`        | What the stock allows: makeable specs with substitution, missing one, which ingredient or pair unlocks the most                                           |
 | `shelf/`        | Whole-day calendar arithmetic, expiry states, the limiting shelf life of a prepared ingredient                                                            |
+| `sync/`         | Pure parts of stock sync: record merge with tombstones, places and the combined view, place document, envelope, storage port, plan ([sync](sync.md))      |
 
 The folders import only each other; `src/index.ts` is the one public
 entry and the package's contract. `test/public-api.test.ts` pins its

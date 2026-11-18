@@ -1,0 +1,119 @@
+{
+  "id": "merge-invalid",
+  "kind": "merge",
+  "description": "Rule 4: invalid records are dropped and take no part. Local: a has an unreadable time (local:a), an empty key is local index 1 (local:1), a number as key is index 2 (local:2), e is valid. Remote: c is a tombstone that carries a value (remote:c), d is not a tombstone and has no value (remote:d), f has deleted:false, which is not allowed (remote:f). Only e is merged; it is on the local side, so the file needs it.",
+  "source": "docs/sync.md",
+  "cases": [
+    {
+      "name": "mixed invalid records",
+      "input": {
+        "local": [
+          {
+            "key": "a",
+            "updatedAt": "yesterday",
+            "value": 1
+          },
+          {
+            "key": "",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": 1
+          },
+          {
+            "key": 7,
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": 1
+          },
+          {
+            "key": "e",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": 1
+          }
+        ],
+        "remote": [
+          {
+            "key": "c",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "deleted": true,
+            "value": 1
+          },
+          {
+            "key": "d",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          {
+            "key": "f",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "deleted": false,
+            "value": 1
+          }
+        ]
+      },
+      "expected": {
+        "records": [
+          {
+            "key": "e",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": 1
+          }
+        ],
+        "changedLocal": [],
+        "changedRemote": ["e"],
+        "rejected": ["local:a", "local:1", "local:2", "remote:c", "remote:d", "remote:f"]
+      }
+    },
+    {
+      "name": "a null value is a value",
+      "input": {
+        "local": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": null
+          }
+        ],
+        "remote": []
+      },
+      "expected": {
+        "records": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": null
+          }
+        ],
+        "changedLocal": [],
+        "changedRemote": ["a"],
+        "rejected": []
+      }
+    },
+    {
+      "name": "invalid timestamps",
+      "input": {
+        "local": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18 10:00:00",
+            "value": 1
+          },
+          {
+            "key": "b",
+            "updatedAt": "2026-11-18T10:00:00+01:00",
+            "value": 1
+          },
+          {
+            "key": "c",
+            "updatedAt": "2026-02-30T10:00:00Z",
+            "value": 1
+          }
+        ],
+        "remote": []
+      },
+      "expected": {
+        "records": [],
+        "changedLocal": [],
+        "changedRemote": [],
+        "rejected": ["local:a", "local:b", "local:c"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,412 @@
+{
+  "id": "combine-places",
+  "kind": "combine",
+  "description": "The union of the ticked places, entries sorted by key, holders in the order of the ticked list. Data: flat holds item-a (n 1), item-b (n 2) and a tombstone for item-c; cabin holds item-c (n 3), item-a (n 4) and a tombstone for item-d; shed holds item-e. Case 1, ticked [flat, cabin]: item-a has holders flat then cabin, item-b flat, item-c only cabin (the flat tombstone does not count), item-d nobody. Case 2, ticked [cabin, flat]: holders of item-a swap. Case 3: unticked shed does not appear. Case 4: an unknown id and a repeated id change nothing. Case 5: nothing ticked gives an empty view.",
+  "source": "docs/sync.md",
+  "cases": [
+    {
+      "name": "two places",
+      "input": {
+        "byPlace": {
+          "flat": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 1
+              }
+            },
+            {
+              "key": "item-b",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 2
+              }
+            },
+            {
+              "key": "item-c",
+              "updatedAt": "2026-11-18T10:05:00.000Z",
+              "deleted": true
+            }
+          ],
+          "cabin": [
+            {
+              "key": "item-c",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 3
+              }
+            },
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 4
+              }
+            },
+            {
+              "key": "item-d",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "deleted": true
+            }
+          ],
+          "shed": [
+            {
+              "key": "item-e",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 5
+              }
+            }
+          ]
+        },
+        "ticked": ["flat", "cabin"]
+      },
+      "expected": [
+        {
+          "key": "item-a",
+          "holders": [
+            {
+              "placeId": "flat",
+              "value": {
+                "n": 1
+              }
+            },
+            {
+              "placeId": "cabin",
+              "value": {
+                "n": 4
+              }
+            }
+          ]
+        },
+        {
+          "key": "item-b",
+          "holders": [
+            {
+              "placeId": "flat",
+              "value": {
+                "n": 2
+              }
+            }
+          ]
+        },
+        {
+          "key": "item-c",
+          "holders": [
+            {
+              "placeId": "cabin",
+              "value": {
+                "n": 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "order of ticked",
+      "input": {
+        "byPlace": {
+          "flat": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 1
+              }
+            },
+            {
+              "key": "item-b",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 2
+              }
+            },
+            {
+              "key": "item-c",
+              "updatedAt": "2026-11-18T10:05:00.000Z",
+              "deleted": true
+            }
+          ],
+          "cabin": [
+            {
+              "key": "item-c",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 3
+              }
+            },
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 4
+              }
+            },
+            {
+              "key": "item-d",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "deleted": true
+            }
+          ],
+          "shed": [
+            {
+              "key": "item-e",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 5
+              }
+            }
+          ]
+        },
+        "ticked": ["cabin", "flat"]
+      },
+      "expected": [
+        {
+          "key": "item-a",
+          "holders": [
+            {
+              "placeId": "cabin",
+              "value": {
+                "n": 4
+              }
+            },
+            {
+              "placeId": "flat",
+              "value": {
+                "n": 1
+              }
+            }
+          ]
+        },
+        {
+          "key": "item-b",
+          "holders": [
+            {
+              "placeId": "flat",
+              "value": {
+                "n": 2
+              }
+            }
+          ]
+        },
+        {
+          "key": "item-c",
+          "holders": [
+            {
+              "placeId": "cabin",
+              "value": {
+                "n": 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "unticked place is left out",
+      "input": {
+        "byPlace": {
+          "flat": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 1
+              }
+            },
+            {
+              "key": "item-b",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 2
+              }
+            },
+            {
+              "key": "item-c",
+              "updatedAt": "2026-11-18T10:05:00.000Z",
+              "deleted": true
+            }
+          ],
+          "cabin": [
+            {
+              "key": "item-c",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 3
+              }
+            },
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 4
+              }
+            },
+            {
+              "key": "item-d",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "deleted": true
+            }
+          ],
+          "shed": [
+            {
+              "key": "item-e",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 5
+              }
+            }
+          ]
+        },
+        "ticked": ["shed"]
+      },
+      "expected": [
+        {
+          "key": "item-e",
+          "holders": [
+            {
+              "placeId": "shed",
+              "value": {
+                "n": 5
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "unknown and repeated ids",
+      "input": {
+        "byPlace": {
+          "flat": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 1
+              }
+            },
+            {
+              "key": "item-b",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 2
+              }
+            },
+            {
+              "key": "item-c",
+              "updatedAt": "2026-11-18T10:05:00.000Z",
+              "deleted": true
+            }
+          ],
+          "cabin": [
+            {
+              "key": "item-c",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 3
+              }
+            },
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 4
+              }
+            },
+            {
+              "key": "item-d",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "deleted": true
+            }
+          ],
+          "shed": [
+            {
+              "key": "item-e",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 5
+              }
+            }
+          ]
+        },
+        "ticked": ["nowhere", "shed", "shed"]
+      },
+      "expected": [
+        {
+          "key": "item-e",
+          "holders": [
+            {
+              "placeId": "shed",
+              "value": {
+                "n": 5
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "nothing ticked",
+      "input": {
+        "byPlace": {
+          "flat": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 1
+              }
+            },
+            {
+              "key": "item-b",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 2
+              }
+            },
+            {
+              "key": "item-c",
+              "updatedAt": "2026-11-18T10:05:00.000Z",
+              "deleted": true
+            }
+          ],
+          "cabin": [
+            {
+              "key": "item-c",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 3
+              }
+            },
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 4
+              }
+            },
+            {
+              "key": "item-d",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "deleted": true
+            }
+          ],
+          "shed": [
+            {
+              "key": "item-e",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": 5
+              }
+            }
+          ]
+        },
+        "ticked": []
+      },
+      "expected": []
+    }
+  ]
+}

@@ -14,8 +14,9 @@ const helpers = readdirSync(`${dir}helpers`)
 test.each([...tests, ...helpers])('%s imports the package from the entry point only', (f) => {
   const text = readFileSync(`${dir}${f}`, 'utf8');
   const imports = [...text.matchAll(/from '((?:\.\.\/)+src[^']*)'/g)].map((m) => m[1] as string);
-  // purity.test.ts and the schema helper do not use the package.
-  if (f === 'purity.test.ts' || f === 'helpers/json-schema.ts') return expect(imports).toEqual([]);
+  // purity.test.ts, check-dist.test.ts and the schema helper do not use the package.
+  if (['purity.test.ts', 'check-dist.test.ts', 'helpers/json-schema.ts'].includes(f))
+    return expect(imports).toEqual([]);
   expect(imports.length, f).toBeGreaterThan(0);
   for (const path of imports) expect(path, f).toMatch(/^(\.\.\/)+src\/index$/);
 });
@@ -60,6 +61,20 @@ test('the entry exports exactly the pinned values', () => {
       'expiry',
       'limitingShelfLife',
       'USE_SOON_DAYS',
+      'buildDocument',
+      'buildEnvelope',
+      'combinePlaces',
+      'DOCUMENT_FORMAT',
+      'DOCUMENT_VERSION',
+      'ENVELOPE_FORMAT',
+      'ENVELOPE_VERSION',
+      'envelopeAad',
+      'instantMs',
+      'mergePlace',
+      'mergeRecords',
+      'parseDocument',
+      'parseEnvelope',
+      'planSync',
     ].sort(),
   );
 });

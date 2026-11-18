@@ -1,6 +1,6 @@
 {
   "name": "@nexumia-de/materia",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "The general model shared by Mixtura and Culina: ingredient tree, templates with slots, versioned specs, stock and shelf life; pure functions",
   "license": "AGPL-3.0-or-later",

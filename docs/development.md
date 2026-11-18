@@ -46,10 +46,13 @@ Three guards:
 1. ESLint rules on `src/**/*.ts` (`eslint.config.js`).
 2. `test/purity.test.ts` lints fixtures that must fail, so the rules
    cannot be removed silently.
-3. `build.mjs` fails when `dist/materia.mjs` contains an import, a DOM
-   or Node-only name, `Date`, `performance`, `crypto` or
-   `Math.random`. Strings and comments are not stripped, so a false
-   positive means rewording the source.
+3. `build.mjs` fails when `dist/materia.mjs` contains an import, the use
+   of a DOM or browser global (`window.`, `document.`, `fetch(`, ...), a
+   Node-only name, `Date`, `performance`, `crypto` or `Math.random`
+   (`check-dist.mjs`, tested by `test/check-dist.test.ts`). The same word
+   as a property or inside a string passes (`result.document`). Strings
+   and comments are not stripped, so a false positive means rewording the
+   source.
 
 ## Adding a rule
 

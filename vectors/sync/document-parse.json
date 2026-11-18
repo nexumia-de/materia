@@ -1,0 +1,457 @@
+{
+  "id": "document-parse",
+  "kind": "document",
+  "description": "parseDocument: a minimal document is accepted. Unknown top-level fields are ignored (not in the result), unknown fields inside values stay. moved with and without note is kept. Errors: text that is not JSON is not-json; JSON that is not an object or has another format is not-a-document; a version number above 1 is newer-version (checked before the rest, even when other fields are missing); version 1 with a missing or broken place, a non-array records or entities, a bad time, a version that is not 1 (0, \"1\") or a broken moved is invalid.",
+  "source": "docs/sync.md",
+  "cases": [
+    {
+      "name": "minimal",
+      "input": {
+        "json": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": []
+        }
+      },
+      "expected": {
+        "ok": true,
+        "document": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": []
+        }
+      }
+    },
+    {
+      "name": "unknown top-level fields are ignored, values kept",
+      "input": {
+        "json": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "u": {
+                  "v": 1
+                }
+              }
+            }
+          ],
+          "entities": [],
+          "extra": true
+        }
+      },
+      "expected": {
+        "ok": true,
+        "document": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "u": {
+                  "v": 1
+                }
+              }
+            }
+          ],
+          "entities": []
+        }
+      }
+    },
+    {
+      "name": "moved with note",
+      "input": {
+        "json": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": [],
+          "moved": {
+            "at": "2026-11-18T10:05:00.000Z",
+            "note": "now on the cabin server"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "document": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": [],
+          "moved": {
+            "at": "2026-11-18T10:05:00.000Z",
+            "note": "now on the cabin server"
+          }
+        }
+      }
+    },
+    {
+      "name": "moved without note",
+      "input": {
+        "json": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": [],
+          "moved": {
+            "at": "2026-11-18T10:05:00.000Z"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "document": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": [],
+          "moved": {
+            "at": "2026-11-18T10:05:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "name": "not json",
+      "input": {
+        "text": "{"
+      },
+      "expected": {
+        "ok": false,
+        "error": "not-json"
+      }
+    },
+    {
+      "name": "empty text",
+      "input": {
+        "text": ""
+      },
+      "expected": {
+        "ok": false,
+        "error": "not-json"
+      }
+    },
+    {
+      "name": "array",
+      "input": {
+        "text": "[]"
+      },
+      "expected": {
+        "ok": false,
+        "error": "not-a-document"
+      }
+    },
+    {
+      "name": "string",
+      "input": {
+        "text": "\"materia-place\""
+      },
+      "expected": {
+        "ok": false,
+        "error": "not-a-document"
+      }
+    },
+    {
+      "name": "other format",
+      "input": {
+        "json": {
+          "format": "something",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": []
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "not-a-document"
+      }
+    },
+    {
+      "name": "newer version",
+      "input": {
+        "json": {
+          "format": "materia-place",
+          "version": 2,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": []
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "newer-version"
+      }
+    },
+    {
+      "name": "newer version wins over missing fields",
+      "input": {
+        "json": {
+          "format": "materia-place",
+          "version": 7
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "newer-version"
+      }
+    },
+    {
+      "name": "version 0",
+      "input": {
+        "json": {
+          "format": "materia-place",
+          "version": 0,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": []
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "version as text",
+      "input": {
+        "json": {
+          "format": "materia-place",
+          "version": "1",
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": []
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "missing place",
+      "input": {
+        "json": {
+          "format": "materia-place",
+          "version": 1,
+          "records": [],
+          "entities": []
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "empty place id",
+      "input": {
+        "json": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": []
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "bad place time",
+      "input": {
+        "json": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "soon"
+          },
+          "records": [],
+          "entities": []
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "records not an array",
+      "input": {
+        "json": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": {},
+          "entities": []
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "record is not an object",
+      "input": {
+        "json": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [1],
+          "entities": []
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "entities missing",
+      "input": {
+        "json": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": []
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "moved without time",
+      "input": {
+        "json": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": [],
+          "moved": {
+            "note": "x"
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "moved note not text",
+      "input": {
+        "json": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": [],
+          "moved": {
+            "at": "2026-11-18T10:05:00.000Z",
+            "note": 5
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    }
+  ]
+}

@@ -44,6 +44,23 @@ export {
   USE_SOON_DAYS,
 } from './shelf/index';
 
+export {
+  buildDocument,
+  buildEnvelope,
+  combinePlaces,
+  DOCUMENT_FORMAT,
+  DOCUMENT_VERSION,
+  ENVELOPE_FORMAT,
+  ENVELOPE_VERSION,
+  envelopeAad,
+  instantMs,
+  mergePlace,
+  mergeRecords,
+  parseDocument,
+  parseEnvelope,
+  planSync,
+} from './sync/index';
+
 export type * from './ingredients/prepared';
 export type * from './ingredients/properties';
 export type * from './ingredients/substitution';
@@ -71,3 +88,9 @@ export type * from './stock/unlock';
 export type * from './shelf/dates';
 export type * from './shelf/expiry';
 export type * from './shelf/limiting';
+export type * from './sync/adapter';
+export type * from './sync/document';
+export type * from './sync/envelope';
+export type * from './sync/places';
+export type * from './sync/plan';
+export type * from './sync/records';

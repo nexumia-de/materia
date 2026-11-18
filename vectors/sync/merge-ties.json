@@ -1,0 +1,221 @@
+{
+  "id": "merge-ties",
+  "kind": "merge",
+  "description": "Rule 3: equal instant. Case 1: tombstone beats value, whichever side. Case 2 (swapped): same result. Case 3: two values, canonical JSON {\"a\":2,\"n\":1} is less than {\"a\":2,\"n\":2}, so the second wins; the local side changes. Case 4: swapped, the file changes instead. Case 5: identical records are no change even when the object keys come in another order. Case 6: same instant, same value, written with and without fractions: the text 10:00:00Z is greater than 10:00:00.000Z (the character Z is above the dot), so it wins.",
+  "source": "docs/sync.md",
+  "cases": [
+    {
+      "name": "tombstone beats value (local value)",
+      "input": {
+        "local": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": 1
+          }
+        ],
+        "remote": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "deleted": true
+          }
+        ]
+      },
+      "expected": {
+        "records": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "deleted": true
+          }
+        ],
+        "changedLocal": ["a"],
+        "changedRemote": [],
+        "rejected": []
+      }
+    },
+    {
+      "name": "tombstone beats value (local tombstone)",
+      "input": {
+        "local": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "deleted": true
+          }
+        ],
+        "remote": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": 1
+          }
+        ]
+      },
+      "expected": {
+        "records": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "deleted": true
+          }
+        ],
+        "changedLocal": [],
+        "changedRemote": ["a"],
+        "rejected": []
+      }
+    },
+    {
+      "name": "greater canonical value wins (remote)",
+      "input": {
+        "local": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": {
+              "n": 1,
+              "a": 2
+            }
+          }
+        ],
+        "remote": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": {
+              "a": 2,
+              "n": 2
+            }
+          }
+        ]
+      },
+      "expected": {
+        "records": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": {
+              "a": 2,
+              "n": 2
+            }
+          }
+        ],
+        "changedLocal": ["a"],
+        "changedRemote": [],
+        "rejected": []
+      }
+    },
+    {
+      "name": "greater canonical value wins (local)",
+      "input": {
+        "local": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": {
+              "a": 2,
+              "n": 2
+            }
+          }
+        ],
+        "remote": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": {
+              "n": 1,
+              "a": 2
+            }
+          }
+        ]
+      },
+      "expected": {
+        "records": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": {
+              "a": 2,
+              "n": 2
+            }
+          }
+        ],
+        "changedLocal": [],
+        "changedRemote": ["a"],
+        "rejected": []
+      }
+    },
+    {
+      "name": "identical records are no change",
+      "input": {
+        "local": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": {
+              "x": 1,
+              "y": 2
+            }
+          }
+        ],
+        "remote": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": {
+              "y": 2,
+              "x": 1
+            }
+          }
+        ]
+      },
+      "expected": {
+        "records": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": {
+              "x": 1,
+              "y": 2
+            }
+          }
+        ],
+        "changedLocal": [],
+        "changedRemote": [],
+        "rejected": []
+      }
+    },
+    {
+      "name": "same instant in two spellings",
+      "input": {
+        "local": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": 1
+          }
+        ],
+        "remote": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00Z",
+            "value": 1
+          }
+        ]
+      },
+      "expected": {
+        "records": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00Z",
+            "value": 1
+          }
+        ],
+        "changedLocal": ["a"],
+        "changedRemote": [],
+        "rejected": []
+      }
+    }
+  ]
+}

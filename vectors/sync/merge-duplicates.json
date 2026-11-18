@@ -1,0 +1,79 @@
+{
+  "id": "merge-duplicates",
+  "kind": "merge",
+  "description": "Rule 4, duplicates: within one side the later record by rules 1 and 3 counts. Local a: 10:00 value 1, 10:05 value 2, 10:00 value 3: the 10:05 one wins. Remote a: a value and a tombstone at 10:10: the tombstone wins by rule 3 and then beats local. The merge is a tombstone.",
+  "source": "docs/sync.md",
+  "cases": [
+    {
+      "name": "later duplicate counts",
+      "input": {
+        "local": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": 1
+          },
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:05:00.000Z",
+            "value": 2
+          },
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": 3
+          }
+        ],
+        "remote": []
+      },
+      "expected": {
+        "records": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:05:00.000Z",
+            "value": 2
+          }
+        ],
+        "changedLocal": [],
+        "changedRemote": ["a"],
+        "rejected": []
+      }
+    },
+    {
+      "name": "duplicates on the remote side",
+      "input": {
+        "local": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:05:00.000Z",
+            "value": 2
+          }
+        ],
+        "remote": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:10:00.000Z",
+            "value": "x"
+          },
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:10:00.000Z",
+            "deleted": true
+          }
+        ]
+      },
+      "expected": {
+        "records": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:10:00.000Z",
+            "deleted": true
+          }
+        ],
+        "changedLocal": ["a"],
+        "changedRemote": [],
+        "rejected": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,565 @@
+{
+  "id": "envelope-parse",
+  "kind": "envelope",
+  "description": "parseEnvelope: a complete envelope is accepted and unknown fields are dropped. Errors: not-json for broken text; not-an-envelope for non-objects and other formats; newer-version for a version number above 1 (before the rest); invalid for version 0, empty strings, iterations that are zero, negative, fractional or not a number, and base64 fields that are empty, contain characters outside the base64 alphabet, or have more than two = at the end.",
+  "source": "docs/sync.md",
+  "cases": [
+    {
+      "name": "complete",
+      "input": {
+        "json": {
+          "format": "materia-sync",
+          "version": 1,
+          "kdf": {
+            "name": "PBKDF2",
+            "hash": "SHA-256",
+            "iterations": 600000,
+            "salt": "c2FsdHNhbHRzYWx0c2E="
+          },
+          "cipher": {
+            "name": "AES-GCM",
+            "nonce": "bm9uY2Vub25jZTEy"
+          },
+          "data": "Y2lwaGVydGV4dA=="
+        }
+      },
+      "expected": {
+        "ok": true,
+        "envelope": {
+          "format": "materia-sync",
+          "version": 1,
+          "kdf": {
+            "name": "PBKDF2",
+            "hash": "SHA-256",
+            "iterations": 600000,
+            "salt": "c2FsdHNhbHRzYWx0c2E="
+          },
+          "cipher": {
+            "name": "AES-GCM",
+            "nonce": "bm9uY2Vub25jZTEy"
+          },
+          "data": "Y2lwaGVydGV4dA=="
+        }
+      }
+    },
+    {
+      "name": "unknown fields are dropped",
+      "input": {
+        "json": {
+          "format": "materia-sync",
+          "version": 1,
+          "kdf": {
+            "name": "PBKDF2",
+            "hash": "SHA-256",
+            "iterations": 600000,
+            "salt": "c2FsdHNhbHRzYWx0c2E=",
+            "more": true
+          },
+          "cipher": {
+            "name": "AES-GCM",
+            "nonce": "bm9uY2Vub25jZTEy"
+          },
+          "data": "Y2lwaGVydGV4dA==",
+          "extra": 1
+        }
+      },
+      "expected": {
+        "ok": true,
+        "envelope": {
+          "format": "materia-sync",
+          "version": 1,
+          "kdf": {
+            "name": "PBKDF2",
+            "hash": "SHA-256",
+            "iterations": 600000,
+            "salt": "c2FsdHNhbHRzYWx0c2E="
+          },
+          "cipher": {
+            "name": "AES-GCM",
+            "nonce": "bm9uY2Vub25jZTEy"
+          },
+          "data": "Y2lwaGVydGV4dA=="
+        }
+      }
+    },
+    {
+      "name": "not json",
+      "input": {
+        "text": "nope"
+      },
+      "expected": {
+        "ok": false,
+        "error": "not-json"
+      }
+    },
+    {
+      "name": "number",
+      "input": {
+        "text": "5"
+      },
+      "expected": {
+        "ok": false,
+        "error": "not-an-envelope"
+      }
+    },
+    {
+      "name": "other format",
+      "input": {
+        "json": {
+          "format": "materia-place",
+          "version": 1,
+          "kdf": {
+            "name": "PBKDF2",
+            "hash": "SHA-256",
+            "iterations": 600000,
+            "salt": "c2FsdHNhbHRzYWx0c2E="
+          },
+          "cipher": {
+            "name": "AES-GCM",
+            "nonce": "bm9uY2Vub25jZTEy"
+          },
+          "data": "Y2lwaGVydGV4dA=="
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "not-an-envelope"
+      }
+    },
+    {
+      "name": "newer version",
+      "input": {
+        "json": {
+          "format": "materia-sync",
+          "version": 2,
+          "kdf": {
+            "name": "PBKDF2",
+            "hash": "SHA-256",
+            "iterations": 600000,
+            "salt": "c2FsdHNhbHRzYWx0c2E="
+          },
+          "cipher": {
+            "name": "AES-GCM",
+            "nonce": "bm9uY2Vub25jZTEy"
+          },
+          "data": "Y2lwaGVydGV4dA=="
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "newer-version"
+      }
+    },
+    {
+      "name": "newer version wins over missing fields",
+      "input": {
+        "json": {
+          "format": "materia-sync",
+          "version": 3
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "newer-version"
+      }
+    },
+    {
+      "name": "version 0",
+      "input": {
+        "json": {
+          "format": "materia-sync",
+          "version": 0,
+          "kdf": {
+            "name": "PBKDF2",
+            "hash": "SHA-256",
+            "iterations": 600000,
+            "salt": "c2FsdHNhbHRzYWx0c2E="
+          },
+          "cipher": {
+            "name": "AES-GCM",
+            "nonce": "bm9uY2Vub25jZTEy"
+          },
+          "data": "Y2lwaGVydGV4dA=="
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "missing kdf",
+      "input": {
+        "json": {
+          "format": "materia-sync",
+          "version": 1,
+          "cipher": {
+            "name": "AES-GCM",
+            "nonce": "bm9uY2Vub25jZTEy"
+          },
+          "data": "Y2lwaGVydGV4dA=="
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "empty kdf name",
+      "input": {
+        "json": {
+          "format": "materia-sync",
+          "version": 1,
+          "kdf": {
+            "name": "",
+            "hash": "SHA-256",
+            "iterations": 600000,
+            "salt": "c2FsdHNhbHRzYWx0c2E="
+          },
+          "cipher": {
+            "name": "AES-GCM",
+            "nonce": "bm9uY2Vub25jZTEy"
+          },
+          "data": "Y2lwaGVydGV4dA=="
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "empty hash",
+      "input": {
+        "json": {
+          "format": "materia-sync",
+          "version": 1,
+          "kdf": {
+            "name": "PBKDF2",
+            "hash": "",
+            "iterations": 600000,
+            "salt": "c2FsdHNhbHRzYWx0c2E="
+          },
+          "cipher": {
+            "name": "AES-GCM",
+            "nonce": "bm9uY2Vub25jZTEy"
+          },
+          "data": "Y2lwaGVydGV4dA=="
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "zero iterations",
+      "input": {
+        "json": {
+          "format": "materia-sync",
+          "version": 1,
+          "kdf": {
+            "name": "PBKDF2",
+            "hash": "SHA-256",
+            "iterations": 0,
+            "salt": "c2FsdHNhbHRzYWx0c2E="
+          },
+          "cipher": {
+            "name": "AES-GCM",
+            "nonce": "bm9uY2Vub25jZTEy"
+          },
+          "data": "Y2lwaGVydGV4dA=="
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "negative iterations",
+      "input": {
+        "json": {
+          "format": "materia-sync",
+          "version": 1,
+          "kdf": {
+            "name": "PBKDF2",
+            "hash": "SHA-256",
+            "iterations": -5,
+            "salt": "c2FsdHNhbHRzYWx0c2E="
+          },
+          "cipher": {
+            "name": "AES-GCM",
+            "nonce": "bm9uY2Vub25jZTEy"
+          },
+          "data": "Y2lwaGVydGV4dA=="
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "fractional iterations",
+      "input": {
+        "json": {
+          "format": "materia-sync",
+          "version": 1,
+          "kdf": {
+            "name": "PBKDF2",
+            "hash": "SHA-256",
+            "iterations": 1.5,
+            "salt": "c2FsdHNhbHRzYWx0c2E="
+          },
+          "cipher": {
+            "name": "AES-GCM",
+            "nonce": "bm9uY2Vub25jZTEy"
+          },
+          "data": "Y2lwaGVydGV4dA=="
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "iterations as text",
+      "input": {
+        "json": {
+          "format": "materia-sync",
+          "version": 1,
+          "kdf": {
+            "name": "PBKDF2",
+            "hash": "SHA-256",
+            "iterations": "600000",
+            "salt": "c2FsdHNhbHRzYWx0c2E="
+          },
+          "cipher": {
+            "name": "AES-GCM",
+            "nonce": "bm9uY2Vub25jZTEy"
+          },
+          "data": "Y2lwaGVydGV4dA=="
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "empty salt",
+      "input": {
+        "json": {
+          "format": "materia-sync",
+          "version": 1,
+          "kdf": {
+            "name": "PBKDF2",
+            "hash": "SHA-256",
+            "iterations": 600000,
+            "salt": ""
+          },
+          "cipher": {
+            "name": "AES-GCM",
+            "nonce": "bm9uY2Vub25jZTEy"
+          },
+          "data": "Y2lwaGVydGV4dA=="
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "salt with a bad character",
+      "input": {
+        "json": {
+          "format": "materia-sync",
+          "version": 1,
+          "kdf": {
+            "name": "PBKDF2",
+            "hash": "SHA-256",
+            "iterations": 600000,
+            "salt": "abc-def_"
+          },
+          "cipher": {
+            "name": "AES-GCM",
+            "nonce": "bm9uY2Vub25jZTEy"
+          },
+          "data": "Y2lwaGVydGV4dA=="
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "missing cipher",
+      "input": {
+        "json": {
+          "format": "materia-sync",
+          "version": 1,
+          "kdf": {
+            "name": "PBKDF2",
+            "hash": "SHA-256",
+            "iterations": 600000,
+            "salt": "c2FsdHNhbHRzYWx0c2E="
+          },
+          "data": "Y2lwaGVydGV4dA=="
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "empty cipher name",
+      "input": {
+        "json": {
+          "format": "materia-sync",
+          "version": 1,
+          "kdf": {
+            "name": "PBKDF2",
+            "hash": "SHA-256",
+            "iterations": 600000,
+            "salt": "c2FsdHNhbHRzYWx0c2E="
+          },
+          "cipher": {
+            "name": "",
+            "nonce": "bm9uY2Vub25jZTEy"
+          },
+          "data": "Y2lwaGVydGV4dA=="
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "nonce with spaces",
+      "input": {
+        "json": {
+          "format": "materia-sync",
+          "version": 1,
+          "kdf": {
+            "name": "PBKDF2",
+            "hash": "SHA-256",
+            "iterations": 600000,
+            "salt": "c2FsdHNhbHRzYWx0c2E="
+          },
+          "cipher": {
+            "name": "AES-GCM",
+            "nonce": "bm9u Y2U="
+          },
+          "data": "Y2lwaGVydGV4dA=="
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "empty data",
+      "input": {
+        "json": {
+          "format": "materia-sync",
+          "version": 1,
+          "kdf": {
+            "name": "PBKDF2",
+            "hash": "SHA-256",
+            "iterations": 600000,
+            "salt": "c2FsdHNhbHRzYWx0c2E="
+          },
+          "cipher": {
+            "name": "AES-GCM",
+            "nonce": "bm9uY2Vub25jZTEy"
+          },
+          "data": ""
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "three padding characters",
+      "input": {
+        "json": {
+          "format": "materia-sync",
+          "version": 1,
+          "kdf": {
+            "name": "PBKDF2",
+            "hash": "SHA-256",
+            "iterations": 600000,
+            "salt": "c2FsdHNhbHRzYWx0c2E="
+          },
+          "cipher": {
+            "name": "AES-GCM",
+            "nonce": "bm9uY2Vub25jZTEy"
+          },
+          "data": "YQ==="
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "padding inside",
+      "input": {
+        "json": {
+          "format": "materia-sync",
+          "version": 1,
+          "kdf": {
+            "name": "PBKDF2",
+            "hash": "SHA-256",
+            "iterations": 600000,
+            "salt": "c2FsdHNhbHRzYWx0c2E="
+          },
+          "cipher": {
+            "name": "AES-GCM",
+            "nonce": "bm9uY2Vub25jZTEy"
+          },
+          "data": "YQ=a"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "data not text",
+      "input": {
+        "json": {
+          "format": "materia-sync",
+          "version": 1,
+          "kdf": {
+            "name": "PBKDF2",
+            "hash": "SHA-256",
+            "iterations": 600000,
+            "salt": "c2FsdHNhbHRzYWx0c2E="
+          },
+          "cipher": {
+            "name": "AES-GCM",
+            "nonce": "bm9uY2Vub25jZTEy"
+          },
+          "data": 12
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    }
+  ]
+}

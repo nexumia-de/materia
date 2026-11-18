@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Vector for the sync module (docs/sync.md)",
+  "type": "object",
+  "required": ["id", "kind", "description", "source", "cases"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "kind": {
+      "enum": ["merge", "place", "combine", "document", "envelope", "plan"]
+    },
+    "description": {
+      "type": "string",
+      "pattern": "."
+    },
+    "source": {
+      "type": "string",
+      "pattern": "."
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "input", "expected"],
+        "properties": {
+          "name": { "type": "string", "pattern": "." },
+          "input": { "type": "object" }
+        }
+      }
+    }
+  }
+}
