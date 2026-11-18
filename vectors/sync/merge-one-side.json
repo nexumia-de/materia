@@ -1,0 +1,102 @@
+{
+  "id": "merge-one-side",
+  "kind": "merge",
+  "description": "Rule 2 and the tombstone rule: a key on one side only is kept, tombstones included, and the merged set is sorted by key. Local holds b and the tombstone d, remote holds a and c. Merged: a, b, c, d. Local must store a and c, the file must get b and d. A lone tombstone is never dropped.",
+  "source": "docs/sync.md",
+  "cases": [
+    {
+      "name": "disjoint keys",
+      "input": {
+        "local": [
+          {
+            "key": "b",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": 1
+          },
+          {
+            "key": "d",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "deleted": true
+          }
+        ],
+        "remote": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": 1
+          },
+          {
+            "key": "c",
+            "updatedAt": "2026-11-18T10:05:00.000Z",
+            "value": 3
+          }
+        ]
+      },
+      "expected": {
+        "records": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": 1
+          },
+          {
+            "key": "b",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": 1
+          },
+          {
+            "key": "c",
+            "updatedAt": "2026-11-18T10:05:00.000Z",
+            "value": 3
+          },
+          {
+            "key": "d",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "deleted": true
+          }
+        ],
+        "changedLocal": ["a", "c"],
+        "changedRemote": ["b", "d"],
+        "rejected": []
+      }
+    },
+    {
+      "name": "both empty",
+      "input": {
+        "local": [],
+        "remote": []
+      },
+      "expected": {
+        "records": [],
+        "changedLocal": [],
+        "changedRemote": [],
+        "rejected": []
+      }
+    },
+    {
+      "name": "remote empty",
+      "input": {
+        "local": [
+          {
+            "key": "x",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": 1
+          }
+        ],
+        "remote": []
+      },
+      "expected": {
+        "records": [
+          {
+            "key": "x",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": 1
+          }
+        ],
+        "changedLocal": [],
+        "changedRemote": ["x"],
+        "rejected": []
+      }
+    }
+  ]
+}

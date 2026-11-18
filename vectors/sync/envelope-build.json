@@ -1,0 +1,32 @@
+{
+  "id": "envelope-build",
+  "kind": "envelope",
+  "description": "buildEnvelope writes compact JSON in a fixed order: format, version, kdf (name, hash, iterations, salt), cipher (name, nonce), data; envelopeAad is the format, a slash and the version.",
+  "source": "docs/sync.md",
+  "cases": [
+    {
+      "name": "fixed order",
+      "input": {
+        "envelope": {
+          "data": "Y2lwaGVydGV4dA==",
+          "cipher": {
+            "nonce": "bm9uY2Vub25jZTEy",
+            "name": "AES-GCM"
+          },
+          "kdf": {
+            "iterations": 600000,
+            "salt": "c2FsdHNhbHRzYWx0c2E=",
+            "hash": "SHA-256",
+            "name": "PBKDF2"
+          },
+          "version": 1,
+          "format": "materia-sync"
+        }
+      },
+      "expected": {
+        "text": "{\"format\":\"materia-sync\",\"version\":1,\"kdf\":{\"name\":\"PBKDF2\",\"hash\":\"SHA-256\",\"iterations\":600000,\"salt\":\"c2FsdHNhbHRzYWx0c2E=\"},\"cipher\":{\"name\":\"AES-GCM\",\"nonce\":\"bm9uY2Vub25jZTEy\"},\"data\":\"Y2lwaGVydGV4dA==\"}",
+        "aad": "materia-sync/1"
+      }
+    }
+  ]
+}

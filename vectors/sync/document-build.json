@@ -1,0 +1,75 @@
+{
+  "id": "document-build",
+  "kind": "document",
+  "description": "buildDocument writes compact JSON in a fixed order: format, version, place (id, name, updatedAt), records, entities, moved (at, note). Records are sorted by key and written key, updatedAt, deleted, value; value keys are sorted deeply. Case 1 starts with records in the wrong order and value keys unsorted: item-a (the tombstone) comes first. Case 2 is an empty document without moved. Case 3: parsing the built text of case 1 gives back the sorted document.",
+  "source": "docs/sync.md",
+  "cases": [
+    {
+      "name": "unsorted input",
+      "input": {
+        "document": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "value": {
+                "z": 1,
+                "a": {
+                  "y": 2,
+                  "b": 3
+                }
+              },
+              "key": "item-b",
+              "updatedAt": "2026-11-18T10:05:00.000Z"
+            },
+            {
+              "deleted": true,
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "key": "item-a"
+            }
+          ],
+          "entities": [
+            {
+              "key": "e1",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": {
+                "n": "x"
+              }
+            }
+          ],
+          "moved": {
+            "note": "gone",
+            "at": "2026-11-18T10:05:00.000Z"
+          }
+        }
+      },
+      "expected": {
+        "text": "{\"format\":\"materia-place\",\"version\":1,\"place\":{\"id\":\"p1\",\"name\":\"Flat\",\"updatedAt\":\"2026-11-18T10:00:00.000Z\"},\"records\":[{\"key\":\"item-a\",\"updatedAt\":\"2026-11-18T10:00:00.000Z\",\"deleted\":true},{\"key\":\"item-b\",\"updatedAt\":\"2026-11-18T10:05:00.000Z\",\"value\":{\"a\":{\"b\":3,\"y\":2},\"z\":1}}],\"entities\":[{\"key\":\"e1\",\"updatedAt\":\"2026-11-18T10:00:00.000Z\",\"value\":{\"n\":\"x\"}}],\"moved\":{\"at\":\"2026-11-18T10:05:00.000Z\",\"note\":\"gone\"}}"
+      }
+    },
+    {
+      "name": "empty",
+      "input": {
+        "document": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": []
+        }
+      },
+      "expected": {
+        "text": "{\"format\":\"materia-place\",\"version\":1,\"place\":{\"id\":\"p1\",\"name\":\"Flat\",\"updatedAt\":\"2026-11-18T10:00:00.000Z\"},\"records\":[],\"entities\":[]}"
+      }
+    }
+  ]
+}

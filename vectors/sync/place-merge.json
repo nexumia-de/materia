@@ -1,0 +1,104 @@
+{
+  "id": "place-merge",
+  "kind": "place",
+  "description": "Newest name wins, ties as for records. Case 1: remote name is newer, local must store it. Case 2: local newer, the file changes. Case 3: equal instant, the greater name string wins (Pantry above Cellar). Case 4: identical, no change. The id of the result is the local id.",
+  "source": "docs/sync.md",
+  "cases": [
+    {
+      "name": "remote newer",
+      "input": {
+        "local": {
+          "id": "p1",
+          "name": "Flat",
+          "updatedAt": "2026-11-18T10:00:00.000Z"
+        },
+        "remote": {
+          "id": "p1",
+          "name": "Home",
+          "updatedAt": "2026-11-18T10:05:00.000Z"
+        }
+      },
+      "expected": {
+        "place": {
+          "id": "p1",
+          "name": "Home",
+          "updatedAt": "2026-11-18T10:05:00.000Z"
+        },
+        "changedLocal": true,
+        "changedRemote": false
+      }
+    },
+    {
+      "name": "local newer",
+      "input": {
+        "local": {
+          "id": "p1",
+          "name": "Home",
+          "updatedAt": "2026-11-18T10:05:00.000Z"
+        },
+        "remote": {
+          "id": "p1",
+          "name": "Flat",
+          "updatedAt": "2026-11-18T10:00:00.000Z"
+        }
+      },
+      "expected": {
+        "place": {
+          "id": "p1",
+          "name": "Home",
+          "updatedAt": "2026-11-18T10:05:00.000Z"
+        },
+        "changedLocal": false,
+        "changedRemote": true
+      }
+    },
+    {
+      "name": "tie: greater name",
+      "input": {
+        "local": {
+          "id": "p1",
+          "name": "Cellar",
+          "updatedAt": "2026-11-18T10:00:00.000Z"
+        },
+        "remote": {
+          "id": "p1",
+          "name": "Pantry",
+          "updatedAt": "2026-11-18T10:00:00.000Z"
+        }
+      },
+      "expected": {
+        "place": {
+          "id": "p1",
+          "name": "Pantry",
+          "updatedAt": "2026-11-18T10:00:00.000Z"
+        },
+        "changedLocal": true,
+        "changedRemote": false
+      }
+    },
+    {
+      "name": "identical",
+      "input": {
+        "local": {
+          "id": "p1",
+          "name": "Flat",
+          "updatedAt": "2026-11-18T10:00:00.000Z"
+        },
+        "remote": {
+          "id": "p1",
+          "name": "Flat",
+          "updatedAt": "2026-11-18T10:00:00.000Z"
+        }
+      },
+      "expected": {
+        "place": {
+          "id": "p1",
+          "name": "Flat",
+          "updatedAt": "2026-11-18T10:00:00.000Z"
+        },
+        "changedLocal": false,
+        "changedRemote": false
+      }
+    }
+  ]
+}

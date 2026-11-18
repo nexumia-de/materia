@@ -1,0 +1,705 @@
+{
+  "id": "plan-sync",
+  "kind": "plan",
+  "description": "planSync. 1: no remote file: local state is stored as is, nothing changed locally, the document is written. 2: remote equals local: nothing to store, nothing to write. 3: remote has the newer record: the local side stores it, the remote already equals the merge so no write. 4: local has the newer record: no local change, write. 5: both sides have a record the other lacks: both change. 6: entities merge like records (remote entity e1 newer). 7: remote has a newer place name: stored locally, no write. 8: remote of another place id is the error other-place. 9: remote marked moved: the merged state is returned (local gets remote-only item-b), moved is reported, nothing is written even though the remote lacks item-a. 10: a remote record with a bad time is rejected (remote:x) and the remote is rewritten without it. 11: the local state with an invalid record: it is dropped, localChanged is true and the file is written. 12: rejected entity is reported with the entity: prefix.",
+  "source": "docs/sync.md",
+  "cases": [
+    {
+      "name": "no remote file",
+      "input": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 1
+            }
+          ],
+          "entities": []
+        }
+      },
+      "expected": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 1
+            }
+          ],
+          "entities": []
+        },
+        "localChanged": false,
+        "write": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 1
+            }
+          ],
+          "entities": []
+        },
+        "rejected": []
+      }
+    },
+    {
+      "name": "equal",
+      "input": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 1
+            }
+          ],
+          "entities": []
+        },
+        "remote": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 1
+            }
+          ],
+          "entities": []
+        }
+      },
+      "expected": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 1
+            }
+          ],
+          "entities": []
+        },
+        "localChanged": false,
+        "rejected": []
+      }
+    },
+    {
+      "name": "remote newer",
+      "input": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 1
+            }
+          ],
+          "entities": []
+        },
+        "remote": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:05:00.000Z",
+              "value": 2
+            }
+          ],
+          "entities": []
+        }
+      },
+      "expected": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:05:00.000Z",
+              "value": 2
+            }
+          ],
+          "entities": []
+        },
+        "localChanged": true,
+        "rejected": []
+      }
+    },
+    {
+      "name": "local newer",
+      "input": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:05:00.000Z",
+              "value": 2
+            }
+          ],
+          "entities": []
+        },
+        "remote": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 1
+            }
+          ],
+          "entities": []
+        }
+      },
+      "expected": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:05:00.000Z",
+              "value": 2
+            }
+          ],
+          "entities": []
+        },
+        "localChanged": false,
+        "write": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:05:00.000Z",
+              "value": 2
+            }
+          ],
+          "entities": []
+        },
+        "rejected": []
+      }
+    },
+    {
+      "name": "both have something new",
+      "input": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 1
+            }
+          ],
+          "entities": []
+        },
+        "remote": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-b",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 2
+            }
+          ],
+          "entities": []
+        }
+      },
+      "expected": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 1
+            },
+            {
+              "key": "item-b",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 2
+            }
+          ],
+          "entities": []
+        },
+        "localChanged": true,
+        "write": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 1
+            },
+            {
+              "key": "item-b",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 2
+            }
+          ],
+          "entities": []
+        },
+        "rejected": []
+      }
+    },
+    {
+      "name": "entities merge",
+      "input": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": [
+            {
+              "key": "e1",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": "old"
+            }
+          ]
+        },
+        "remote": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": [
+            {
+              "key": "e1",
+              "updatedAt": "2026-11-18T10:05:00.000Z",
+              "value": "new"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": [
+            {
+              "key": "e1",
+              "updatedAt": "2026-11-18T10:05:00.000Z",
+              "value": "new"
+            }
+          ]
+        },
+        "localChanged": true,
+        "rejected": []
+      }
+    },
+    {
+      "name": "newer place name",
+      "input": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": []
+        },
+        "remote": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Home",
+            "updatedAt": "2026-11-18T10:05:00.000Z"
+          },
+          "records": [],
+          "entities": []
+        }
+      },
+      "expected": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Home",
+            "updatedAt": "2026-11-18T10:05:00.000Z"
+          },
+          "records": [],
+          "entities": []
+        },
+        "localChanged": true,
+        "rejected": []
+      }
+    },
+    {
+      "name": "other place",
+      "input": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": []
+        },
+        "remote": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p2",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": []
+        }
+      },
+      "expected": {
+        "error": "other-place"
+      }
+    },
+    {
+      "name": "moved",
+      "input": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 1
+            }
+          ],
+          "entities": []
+        },
+        "remote": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-b",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 2
+            }
+          ],
+          "entities": [],
+          "moved": {
+            "at": "2026-11-18T10:10:00.000Z",
+            "note": "new home"
+          }
+        }
+      },
+      "expected": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 1
+            },
+            {
+              "key": "item-b",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 2
+            }
+          ],
+          "entities": []
+        },
+        "localChanged": true,
+        "moved": {
+          "at": "2026-11-18T10:10:00.000Z",
+          "note": "new home"
+        },
+        "rejected": []
+      }
+    },
+    {
+      "name": "rejected remote record",
+      "input": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 1
+            }
+          ],
+          "entities": []
+        },
+        "remote": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 1
+            },
+            {
+              "key": "x",
+              "updatedAt": "later",
+              "value": 1
+            }
+          ],
+          "entities": []
+        }
+      },
+      "expected": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 1
+            }
+          ],
+          "entities": []
+        },
+        "localChanged": false,
+        "write": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 1
+            }
+          ],
+          "entities": []
+        },
+        "rejected": ["remote:x"]
+      }
+    },
+    {
+      "name": "invalid local record",
+      "input": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 1
+            },
+            {
+              "key": "bad",
+              "updatedAt": "2026-11-18T10:00:00.000Z"
+            }
+          ],
+          "entities": []
+        },
+        "remote": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 1
+            }
+          ],
+          "entities": []
+        }
+      },
+      "expected": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [
+            {
+              "key": "item-a",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 1
+            }
+          ],
+          "entities": []
+        },
+        "localChanged": true,
+        "rejected": ["local:bad"]
+      }
+    },
+    {
+      "name": "rejected entity",
+      "input": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": [
+            {
+              "key": "",
+              "updatedAt": "2026-11-18T10:00:00.000Z",
+              "value": 1
+            }
+          ]
+        }
+      },
+      "expected": {
+        "local": {
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": []
+        },
+        "localChanged": true,
+        "write": {
+          "format": "materia-place",
+          "version": 1,
+          "place": {
+            "id": "p1",
+            "name": "Flat",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "records": [],
+          "entities": []
+        },
+        "rejected": ["entity:local:0"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "id": "merge-opaque-value",
+  "kind": "merge",
+  "description": "Rule 5: the value is opaque. Unknown fields, nested objects, arrays and nulls inside the winning value come out exactly as they went in.",
+  "source": "docs/sync.md",
+  "cases": [
+    {
+      "name": "unknown fields are kept",
+      "input": {
+        "local": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": {
+              "known": 1,
+              "extra": {
+                "z": [
+                  1,
+                  2,
+                  {
+                    "q": null
+                  }
+                ],
+                "y": null
+              }
+            }
+          }
+        ],
+        "remote": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:05:00.000Z",
+            "value": {
+              "known": 2,
+              "future": "field",
+              "list": [3, 1, 2]
+            }
+          }
+        ]
+      },
+      "expected": {
+        "records": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:05:00.000Z",
+            "value": {
+              "known": 2,
+              "future": "field",
+              "list": [3, 1, 2]
+            }
+          }
+        ],
+        "changedLocal": ["a"],
+        "changedRemote": [],
+        "rejected": []
+      }
+    },
+    {
+      "name": "unknown top-level record fields are dropped, the value stays",
+      "input": {
+        "local": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": {
+              "u": 1
+            },
+            "note": "extra"
+          }
+        ],
+        "remote": []
+      },
+      "expected": {
+        "records": [
+          {
+            "key": "a",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "value": {
+              "u": 1
+            }
+          }
+        ],
+        "changedLocal": [],
+        "changedRemote": ["a"],
+        "rejected": []
+      }
+    }
+  ]
+}
