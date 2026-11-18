@@ -1,0 +1,37 @@
+{
+  "id": "renumber-three-on-one-number",
+  "kind": "renumber",
+  "title": "Three records on one number: the earliest stays, the other two get the next two numbers in order of creation",
+  "versions": [
+    {
+      "id": "r3",
+      "lineageId": "A",
+      "version": 3,
+      "createdAt": "2026-11-18T10:10:00.000Z"
+    },
+    {
+      "id": "r1",
+      "lineageId": "A",
+      "version": 3,
+      "createdAt": "2026-11-18T10:00:00.000Z"
+    },
+    {
+      "id": "r2",
+      "lineageId": "A",
+      "version": 3,
+      "createdAt": "2026-11-18T10:05:00.000Z"
+    }
+  ],
+  "expected": [
+    {
+      "id": "r2",
+      "from": 3,
+      "to": 4
+    },
+    {
+      "id": "r3",
+      "from": 3,
+      "to": 5
+    }
+  ]
+}

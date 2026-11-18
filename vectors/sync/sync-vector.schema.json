@@ -9,7 +9,17 @@
       "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
     },
     "kind": {
-      "enum": ["merge", "place", "combine", "document", "envelope", "plan"]
+      "enum": [
+        "merge",
+        "place",
+        "combine",
+        "document",
+        "envelope",
+        "plan",
+        "unit-parse",
+        "unit-build",
+        "unit-plan"
+      ]
     },
     "description": {
       "type": "string",

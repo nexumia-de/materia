@@ -1,0 +1,864 @@
+{
+  "id": "unit-parse",
+  "kind": "unit-parse",
+  "description": "parseUnit. Valid documents of each kind; unknown top-level fields are ignored; unknown collections are kept. Errors: not-json; not-a-unit (not an object, other format); newer-version (checked before the rest); unknown-kind (a kind string other than place, library, profile); invalid (version not 1, missing kind, broken unit, collections not an object, bad collection name, collection not an array of objects, broken moved).",
+  "source": "docs/sync.md",
+  "cases": [
+    {
+      "name": "place without collections",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "place",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {}
+        }
+      },
+      "expected": {
+        "ok": true,
+        "unit": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "place",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {}
+        }
+      }
+    },
+    {
+      "name": "profile with two collections and moved with note",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "profile",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "preferences": [
+              {
+                "key": "theme",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": "dark"
+              }
+            ],
+            "keys": [
+              {
+                "key": "k1",
+                "updatedAt": "2026-11-18T10:05:00.000Z",
+                "deleted": true
+              }
+            ]
+          },
+          "moved": {
+            "at": "2026-11-18T10:05:00.000Z",
+            "note": "new host"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "unit": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "profile",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "preferences": [
+              {
+                "key": "theme",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": "dark"
+              }
+            ],
+            "keys": [
+              {
+                "key": "k1",
+                "updatedAt": "2026-11-18T10:05:00.000Z",
+                "deleted": true
+              }
+            ]
+          },
+          "moved": {
+            "at": "2026-11-18T10:05:00.000Z",
+            "note": "new host"
+          }
+        }
+      }
+    },
+    {
+      "name": "moved without note",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {},
+          "moved": {
+            "at": "2026-11-18T10:05:00.000Z"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "unit": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {},
+          "moved": {
+            "at": "2026-11-18T10:05:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "name": "unknown top-level fields are ignored",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z",
+            "colour": "red"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": {
+                  "n": 1
+                }
+              }
+            ]
+          },
+          "extra": 1
+        }
+      },
+      "expected": {
+        "ok": true,
+        "unit": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": {
+                  "n": 1
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "an unknown collection is kept",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [],
+            "future-things-2": [
+              {
+                "key": "x",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "unit": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [],
+            "future-things-2": [
+              {
+                "key": "x",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a bad record stays: the merge rejects it",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "",
+                "updatedAt": "bad"
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "unit": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "",
+                "updatedAt": "bad"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "not json",
+      "input": {
+        "text": "nope"
+      },
+      "expected": {
+        "ok": false,
+        "error": "not-json"
+      }
+    },
+    {
+      "name": "an array is not a unit",
+      "input": {
+        "json": []
+      },
+      "expected": {
+        "ok": false,
+        "error": "not-a-unit"
+      }
+    },
+    {
+      "name": "another format",
+      "input": {
+        "json": {
+          "format": "materia-place",
+          "version": 1
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "not-a-unit"
+      }
+    },
+    {
+      "name": "newer version before the rest",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 2
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "newer-version"
+      }
+    },
+    {
+      "name": "unknown kind",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "group",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": {
+                  "n": 1
+                }
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "unknown-kind"
+      }
+    },
+    {
+      "name": "version missing",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": {
+                  "n": 1
+                }
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "version 0",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 0,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": {
+                  "n": 1
+                }
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "kind missing",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": {
+                  "n": 1
+                }
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "kind not a string",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": 3,
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": {
+                  "n": 1
+                }
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "unit id empty",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": {
+                  "n": 1
+                }
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "unit name not a string",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": 1,
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": {
+                  "n": 1
+                }
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "unit time bad",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "yesterday"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": {
+                  "n": 1
+                }
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "unit missing",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": {
+                  "n": 1
+                }
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "collections missing",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "collections an array",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": []
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "collection name with capital",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "Specs": []
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "collection name starting with a digit",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "1a": []
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "collection name with underscore",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "a_b": []
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "collection name empty",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "": []
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "collection not an array",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": {}
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "record not an object",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [1]
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "moved time bad",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": {
+                  "n": 1
+                }
+              }
+            ]
+          },
+          "moved": {
+            "at": "later"
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "moved note not a string",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": {
+                  "n": 1
+                }
+              }
+            ]
+          },
+          "moved": {
+            "at": "2026-11-18T10:05:00.000Z",
+            "note": 3
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    },
+    {
+      "name": "moved not an object",
+      "input": {
+        "json": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": {
+                  "n": 1
+                }
+              }
+            ]
+          },
+          "moved": "yes"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "invalid"
+      }
+    }
+  ]
+}

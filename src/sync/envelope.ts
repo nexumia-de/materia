@@ -2,7 +2,9 @@
 // (docs/sync.md#the-envelope). No cryptography and no base64 coding here; an
 // app fills the `Cipher` port with its platform's functions.
 
+/** The format name of an envelope. */
 export const ENVELOPE_FORMAT = 'materia-sync';
+/** The version of the envelope this package reads and writes. */
 export const ENVELOPE_VERSION = 1;
 
 export interface Envelope {
@@ -21,7 +23,11 @@ const text = (x: unknown): x is string => typeof x === 'string' && x !== '';
 const BASE64 = /^[A-Za-z0-9+/]+={0,2}$/;
 const b64 = (x: unknown): x is string => typeof x === 'string' && BASE64.test(x);
 
-/** Parses and validates the stored text; unknown fields are ignored. */
+/**
+ * Parses and validates the stored text; unknown fields are ignored.
+ * @param json The text of the stored file.
+ * @returns The envelope, or the first problem found.
+ */
 export function parseEnvelope(
   json: string,
 ): { ok: true; envelope: Envelope } | { ok: false; error: EnvelopeError } {
@@ -64,7 +70,11 @@ export function parseEnvelope(
   };
 }
 
-/** The stable text, fields in a fixed order. */
+/**
+ * Writes the stable text of an envelope, fields in a fixed order.
+ * @param envelope The envelope.
+ * @returns The compact JSON text.
+ */
 export function buildEnvelope(envelope: Envelope): string {
   const { kdf, cipher } = envelope;
   return JSON.stringify({
@@ -76,7 +86,11 @@ export function buildEnvelope(envelope: Envelope): string {
   });
 }
 
-/** The additional data the cipher binds to the ciphertext: `materia-sync/1`. */
+/**
+ * Gives the additional data the cipher binds to the ciphertext: `materia-sync/1`.
+ * @param envelope Anything with the envelope's `format` and `version`.
+ * @returns The text `<format>/<version>`.
+ */
 export function envelopeAad(envelope: Pick<Envelope, 'format' | 'version'>): string {
   return `${envelope.format}/${envelope.version}`;
 }

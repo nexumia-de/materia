@@ -14,4 +14,8 @@ export type { CombinedEntry, Place } from './places';
 export { mergeRecords } from './records';
 export type { MergeResult, SyncRecord } from './records';
 export { planSync } from './plan';
+export { buildUnit, parseUnit, UNIT_FORMAT, UNIT_VERSION } from './unit';
+export type { UnitDocument, UnitError, UnitInfo, UnitKind } from './unit';
+export { planUnitSync } from './unit-plan';
+export type { LocalUnitState, UnitSyncPlan } from './unit-plan';
 export type { LocalPlaceState, SyncPlan } from './plan';

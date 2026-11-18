@@ -1,0 +1,7 @@
+{
+  "id": "renumber-empty",
+  "kind": "renumber",
+  "title": "No versions: nothing to change",
+  "versions": [],
+  "expected": []
+}

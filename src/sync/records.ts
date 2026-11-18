@@ -24,7 +24,11 @@ export interface MergeResult<V> {
   rejected: string[];
 }
 
-/** The record in its clean form when it is valid, else undefined. */
+/**
+ * Checks one record and copies it to its clean form.
+ * @param input Any value that should be a record.
+ * @returns The clean record, or undefined when the key, the time or the value/tombstone shape is invalid.
+ */
 export function normaliseRecord<V>(input: unknown): SyncRecord<V> | undefined {
   if (input === null || typeof input !== 'object') return undefined;
   const r = input as Record<string, unknown>;
@@ -39,7 +43,12 @@ export function normaliseRecord<V>(input: unknown): SyncRecord<V> | undefined {
   return { key: r.key, updatedAt, value: r.value as V };
 }
 
-/** The record that wins between two valid records of one key; the same on both sides. */
+/**
+ * Picks the winner between two valid records of one key; the same on both sides.
+ * @param a One record.
+ * @param b The other record of the same key.
+ * @returns The newer record; on equal time a tombstone, then the greater value, then the greater timestamp text.
+ */
 export function winner<V>(a: SyncRecord<V>, b: SyncRecord<V>): SyncRecord<V> {
   const ta = instantMs(a.updatedAt) as number;
   const tb = instantMs(b.updatedAt) as number;
@@ -77,6 +86,9 @@ const same = (a: SyncRecord | undefined, b: SyncRecord): boolean =>
  * Merges the local and the remote records. The result is the same when the
  * arguments are swapped, and merging it with either input changes nothing.
  * Tombstones are never removed.
+ * @param local The local records.
+ * @param remote The remote records.
+ * @returns The merged records sorted by key, the keys each side must update, and the rejected input.
  */
 export function mergeRecords<V>(
   local: readonly SyncRecord<V>[],

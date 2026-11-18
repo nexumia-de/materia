@@ -1,0 +1,1306 @@
+{
+  "id": "unit-plan",
+  "kind": "unit-plan",
+  "description": "planUnitSync. 1: no remote file: local stored as is, document written. 2: equal: nothing. 3: remote newer record: stored locally, no write. 4: local newer: write only. 5: a collection only on the remote is stored (also an unknown one). 6: a collection only on the local side is kept and written. 7: both sides have a record the other lacks. 8: an empty collection missing remotely is written, no local change. 9: remote has a newer unit name. 10: local has the newer unit name. 11: other unit id. 12: other kind. 13: moved: merged state, moved reported, no write. 14: rejected entries carry the collection name, by key and by index. 15: a record with a bad time on the remote is dropped and the remote rewritten. 16: collections merge independently. 17: a place kind works the same.",
+  "source": "docs/sync.md",
+  "cases": [
+    {
+      "name": "no remote file",
+      "input": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "localChanged": false,
+        "rejected": [],
+        "write": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "equal",
+      "input": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "remote": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "localChanged": false,
+        "rejected": []
+      }
+    },
+    {
+      "name": "remote record newer",
+      "input": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "remote": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:05:00.000Z",
+                "value": 2
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:05:00.000Z",
+                "value": 2
+              }
+            ]
+          }
+        },
+        "localChanged": true,
+        "rejected": []
+      }
+    },
+    {
+      "name": "local record newer",
+      "input": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:05:00.000Z",
+                "value": 2
+              }
+            ]
+          }
+        },
+        "remote": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:05:00.000Z",
+                "value": 2
+              }
+            ]
+          }
+        },
+        "localChanged": false,
+        "rejected": [],
+        "write": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:05:00.000Z",
+                "value": 2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "collection only on the remote",
+      "input": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "remote": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ],
+            "future-things": [
+              {
+                "key": "b",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ],
+            "future-things": [
+              {
+                "key": "b",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "localChanged": true,
+        "rejected": []
+      }
+    },
+    {
+      "name": "collection only on the local side",
+      "input": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ],
+            "templates": [
+              {
+                "key": "b",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "remote": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ],
+            "templates": [
+              {
+                "key": "b",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "localChanged": false,
+        "rejected": [],
+        "write": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ],
+            "templates": [
+              {
+                "key": "b",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "both sides have something the other lacks",
+      "input": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "remote": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "b",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ],
+            "templates": [
+              {
+                "key": "b",
+                "updatedAt": "2026-11-18T10:05:00.000Z",
+                "value": 2
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              },
+              {
+                "key": "b",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ],
+            "templates": [
+              {
+                "key": "b",
+                "updatedAt": "2026-11-18T10:05:00.000Z",
+                "value": 2
+              }
+            ]
+          }
+        },
+        "localChanged": true,
+        "rejected": [],
+        "write": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              },
+              {
+                "key": "b",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ],
+            "templates": [
+              {
+                "key": "b",
+                "updatedAt": "2026-11-18T10:05:00.000Z",
+                "value": 2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "empty collection missing remotely",
+      "input": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ],
+            "affinities": []
+          }
+        },
+        "remote": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ],
+            "affinities": []
+          }
+        },
+        "localChanged": false,
+        "rejected": [],
+        "write": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ],
+            "affinities": []
+          }
+        }
+      }
+    },
+    {
+      "name": "remote unit name newer",
+      "input": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "remote": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Ours",
+            "updatedAt": "2026-11-18T10:05:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Ours",
+            "updatedAt": "2026-11-18T10:05:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "localChanged": true,
+        "rejected": []
+      }
+    },
+    {
+      "name": "local unit name newer",
+      "input": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Ours",
+            "updatedAt": "2026-11-18T10:05:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "remote": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Ours",
+            "updatedAt": "2026-11-18T10:05:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "localChanged": false,
+        "rejected": [],
+        "write": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Ours",
+            "updatedAt": "2026-11-18T10:05:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "other unit",
+      "input": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "remote": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l2",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "error": "other-unit"
+      }
+    },
+    {
+      "name": "other kind",
+      "input": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "remote": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "profile",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "error": "other-kind"
+      }
+    },
+    {
+      "name": "remote moved",
+      "input": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "remote": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "b",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          },
+          "moved": {
+            "at": "2026-11-18T10:10:00.000Z",
+            "note": "new host"
+          }
+        }
+      },
+      "expected": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              },
+              {
+                "key": "b",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "localChanged": true,
+        "rejected": [],
+        "moved": {
+          "at": "2026-11-18T10:10:00.000Z",
+          "note": "new host"
+        }
+      }
+    },
+    {
+      "name": "rejected entries carry the collection name",
+      "input": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ],
+            "ingredients": [
+              {
+                "updatedAt": "bad",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "remote": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              },
+              {
+                "key": "x",
+                "updatedAt": "bad",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ],
+            "ingredients": []
+          }
+        },
+        "localChanged": true,
+        "rejected": ["ingredients:local:0", "specs:remote:x"],
+        "write": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ],
+            "ingredients": []
+          }
+        }
+      }
+    },
+    {
+      "name": "remote bad record is dropped from the file",
+      "input": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "remote": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              },
+              {
+                "key": "x",
+                "updatedAt": "bad",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "localChanged": false,
+        "rejected": ["specs:remote:x"],
+        "write": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "collections merge independently",
+      "input": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:05:00.000Z",
+                "value": 2
+              }
+            ],
+            "templates": [
+              {
+                "key": "b",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "remote": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ],
+            "templates": [
+              {
+                "key": "b",
+                "updatedAt": "2026-11-18T10:05:00.000Z",
+                "value": 2
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "local": {
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:05:00.000Z",
+                "value": 2
+              }
+            ],
+            "templates": [
+              {
+                "key": "b",
+                "updatedAt": "2026-11-18T10:05:00.000Z",
+                "value": 2
+              }
+            ]
+          }
+        },
+        "localChanged": true,
+        "rejected": [],
+        "write": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:05:00.000Z",
+                "value": 2
+              }
+            ],
+            "templates": [
+              {
+                "key": "b",
+                "updatedAt": "2026-11-18T10:05:00.000Z",
+                "value": 2
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a place kind",
+      "input": {
+        "local": {
+          "kind": "place",
+          "unit": {
+            "id": "p1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "records": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "remote": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "place",
+          "unit": {
+            "id": "p1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "records": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:05:00.000Z",
+                "value": 2
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "local": {
+          "kind": "place",
+          "unit": {
+            "id": "p1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "records": [
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:05:00.000Z",
+                "value": 2
+              }
+            ]
+          }
+        },
+        "localChanged": true,
+        "rejected": []
+      }
+    }
+  ]
+}

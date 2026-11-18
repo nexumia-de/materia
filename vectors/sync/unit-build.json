@@ -1,0 +1,140 @@
+{
+  "id": "unit-build",
+  "kind": "unit-build",
+  "description": "buildUnit. Fixed key order, collection names sorted, records sorted by key, record field order key, updatedAt, deleted, value, value keys sorted, moved last with at before note. Each text parses back and builds to the same text.",
+  "source": "docs/sync.md",
+  "cases": [
+    {
+      "name": "empty place",
+      "input": {
+        "unit": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "place",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {}
+        }
+      },
+      "expected": {
+        "text": "{\"format\":\"materia-unit\",\"version\":1,\"kind\":\"place\",\"unit\":{\"id\":\"l1\",\"name\":\"Mine\",\"updatedAt\":\"2026-11-18T10:00:00.000Z\"},\"collections\":{}}"
+      }
+    },
+    {
+      "name": "collections and records sorted, value keys sorted",
+      "input": {
+        "unit": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "specs": [
+              {
+                "key": "b",
+                "updatedAt": "2026-11-18T10:05:00.000Z",
+                "value": {
+                  "z": 1,
+                  "a": [
+                    {
+                      "y": 2,
+                      "x": 1
+                    }
+                  ]
+                }
+              },
+              {
+                "key": "a",
+                "updatedAt": "2026-11-18T10:00:00.000Z",
+                "value": "x"
+              }
+            ],
+            "affinities": []
+          }
+        }
+      },
+      "expected": {
+        "text": "{\"format\":\"materia-unit\",\"version\":1,\"kind\":\"library\",\"unit\":{\"id\":\"l1\",\"name\":\"Mine\",\"updatedAt\":\"2026-11-18T10:00:00.000Z\"},\"collections\":{\"affinities\":[],\"specs\":[{\"key\":\"a\",\"updatedAt\":\"2026-11-18T10:00:00.000Z\",\"value\":\"x\"},{\"key\":\"b\",\"updatedAt\":\"2026-11-18T10:05:00.000Z\",\"value\":{\"a\":[{\"x\":1,\"y\":2}],\"z\":1}}]}}"
+      }
+    },
+    {
+      "name": "a tombstone has no value",
+      "input": {
+        "unit": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "profile",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {
+            "keys": [
+              {
+                "key": "k",
+                "updatedAt": "2026-11-18T10:05:00.000Z",
+                "deleted": true
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "text": "{\"format\":\"materia-unit\",\"version\":1,\"kind\":\"profile\",\"unit\":{\"id\":\"l1\",\"name\":\"Mine\",\"updatedAt\":\"2026-11-18T10:00:00.000Z\"},\"collections\":{\"keys\":[{\"key\":\"k\",\"updatedAt\":\"2026-11-18T10:05:00.000Z\",\"deleted\":true}]}}"
+      }
+    },
+    {
+      "name": "moved with a note",
+      "input": {
+        "unit": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {},
+          "moved": {
+            "note": "gone",
+            "at": "2026-11-18T10:10:00.000Z"
+          }
+        }
+      },
+      "expected": {
+        "text": "{\"format\":\"materia-unit\",\"version\":1,\"kind\":\"library\",\"unit\":{\"id\":\"l1\",\"name\":\"Mine\",\"updatedAt\":\"2026-11-18T10:00:00.000Z\"},\"collections\":{},\"moved\":{\"at\":\"2026-11-18T10:10:00.000Z\",\"note\":\"gone\"}}"
+      }
+    },
+    {
+      "name": "moved without a note",
+      "input": {
+        "unit": {
+          "format": "materia-unit",
+          "version": 1,
+          "kind": "library",
+          "unit": {
+            "id": "l1",
+            "name": "Mine",
+            "updatedAt": "2026-11-18T10:00:00.000Z"
+          },
+          "collections": {},
+          "moved": {
+            "at": "2026-11-18T10:10:00.000Z"
+          }
+        }
+      },
+      "expected": {
+        "text": "{\"format\":\"materia-unit\",\"version\":1,\"kind\":\"library\",\"unit\":{\"id\":\"l1\",\"name\":\"Mine\",\"updatedAt\":\"2026-11-18T10:00:00.000Z\"},\"collections\":{},\"moved\":{\"at\":\"2026-11-18T10:10:00.000Z\"}}"
+      }
+    }
+  ]
+}

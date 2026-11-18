@@ -34,6 +34,9 @@ const reshaped = (m: MergeResult<unknown>, input: readonly unknown[]): boolean =
  * file yet, so the local state is written. A document of another place is an
  * error result. When the remote is marked moved, the merged state is still
  * returned (nothing local is lost) but nothing is written.
+ * @param local The local place, records and entities.
+ * @param remote The parsed remote document, or undefined when there is none.
+ * @returns The plan, or `other-place` when the ids differ.
  */
 export function planSync<V, E>(
   local: LocalPlaceState<V, E>,

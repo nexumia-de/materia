@@ -7,6 +7,7 @@ import { describe, expect, test } from 'vitest';
 import {
   buildDocument,
   buildEnvelope,
+  buildUnit,
   combinePlaces,
   envelopeAad,
   instantMs,
@@ -14,12 +15,16 @@ import {
   mergeRecords,
   parseDocument,
   parseEnvelope,
+  parseUnit,
   planSync,
+  planUnitSync,
   type Envelope,
   type LocalPlaceState,
+  type LocalUnitState,
   type Place,
   type PlaceDocument,
   type SyncRecord,
+  type UnitDocument,
 } from '../src/index';
 import { validate } from './helpers/json-schema';
 
@@ -55,7 +60,17 @@ describe('sync vectors', () => {
   });
   test('there are vectors for every kind', () => {
     expect(new Set(vectors.map((x) => x.v.kind))).toEqual(
-      new Set(['merge', 'place', 'combine', 'document', 'envelope', 'plan']),
+      new Set([
+        'merge',
+        'place',
+        'combine',
+        'document',
+        'envelope',
+        'plan',
+        'unit-parse',
+        'unit-build',
+        'unit-plan',
+      ]),
     );
   });
   for (const { file, v } of vectors) {
@@ -70,6 +85,17 @@ describe('sync vectors', () => {
           test(c.name, () => expect(combinePlaces(i.byPlace, i.ticked)).toEqual(c.expected));
         } else if (v.kind === 'plan') {
           test(c.name, () => expect(planSync(i.local, i.remote)).toEqual(c.expected));
+        } else if (v.kind === 'unit-plan') {
+          test(c.name, () => expect(planUnitSync(i.local, i.remote)).toEqual(c.expected));
+        } else if (v.kind === 'unit-parse') {
+          test(c.name, () => expect(parseUnit(text(i))).toEqual(c.expected));
+        } else if (v.kind === 'unit-build') {
+          test(c.name, () => {
+            const out = buildUnit((i as unknown as { unit: UnitDocument }).unit);
+            expect({ text: out }).toEqual(c.expected);
+            const back = parseUnit(out);
+            expect(back.ok && buildUnit(back.unit)).toBe(out);
+          });
         } else if (v.kind === 'document') {
           if (file === 'document-build.json') {
             test(c.name, () => {
@@ -207,5 +233,46 @@ describe('envelope type', () => {
     );
     const envelope: Envelope | undefined = e.ok ? e.envelope : undefined;
     expect(envelope?.version).toBe(1);
+  });
+});
+
+describe('unit plan properties', () => {
+  const unit = { id: 'u', name: 'Mine', updatedAt: TIMES[0] as string };
+  const names = ['specs', 'templates', 'future-things'];
+  const collections = (pick: (n: number) => number) => {
+    const out: Record<string, Rec[]> = {};
+    for (const name of names) if (pick(3) > 0) out[name] = generate(pick);
+    return out;
+  };
+  test('after both sides apply a plan, a second cycle has nothing to do', () => {
+    const pick = seeded(4242);
+    for (let n = 0; n < 200; n++) {
+      const local: LocalUnitState = {
+        kind: 'library',
+        unit,
+        collections: collections(pick),
+      };
+      const remote: UnitDocument = {
+        format: 'materia-unit',
+        version: 1,
+        kind: 'library',
+        unit,
+        collections: collections(pick),
+      };
+      const first = planUnitSync(local, remote);
+      if ('error' in first) throw new Error('same unit expected');
+      const second = planUnitSync(first.local, first.write ?? remote);
+      if ('error' in second) throw new Error('same unit expected');
+      expect(second.write, `generated ${n}`).toBeUndefined();
+      expect(second.localChanged, `generated ${n}`).toBe(false);
+      const swapped = planUnitSync(
+        { kind: 'library', unit, collections: remote.collections },
+        { ...remote, collections: local.collections },
+      );
+      if ('error' in swapped) throw new Error('same unit expected');
+      expect(swapped.local.collections, `generated ${n}: symmetry`).toEqual(
+        first.local.collections,
+      );
+    }
   });
 });

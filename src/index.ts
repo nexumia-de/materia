@@ -24,7 +24,7 @@ export { fillSlots } from './templates/slots';
 export { matchTemplates } from './templates/match';
 export { findVariants } from './templates/variants';
 
-export { buildFamily, findFamilyCycles, summariseRiff } from './specs/index';
+export { buildFamily, findFamilyCycles, renumberClashes, summariseRiff } from './specs/index';
 export { diffVersions } from './specs/diff';
 
 export {
@@ -59,6 +59,11 @@ export {
   parseDocument,
   parseEnvelope,
   planSync,
+  buildUnit,
+  parseUnit,
+  planUnitSync,
+  UNIT_FORMAT,
+  UNIT_VERSION,
 } from './sync/index';
 
 export type * from './ingredients/prepared';
@@ -94,3 +99,6 @@ export type * from './sync/envelope';
 export type * from './sync/places';
 export type * from './sync/plan';
 export type * from './sync/records';
+export type * from './sync/unit';
+export type * from './sync/unit-plan';
+export type * from './specs/renumber';
