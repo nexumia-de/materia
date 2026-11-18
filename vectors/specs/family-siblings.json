@@ -1,0 +1,46 @@
+{
+  "id": "family-siblings",
+  "kind": "family",
+  "title": "Siblings and children in order of creation",
+  "specs": [
+    {
+      "id": "p1",
+      "lineageId": "P",
+      "version": 1
+    },
+    {
+      "id": "r1",
+      "lineageId": "R1",
+      "version": 1,
+      "parentId": "p1",
+      "createdAt": "2026-01-02"
+    },
+    {
+      "id": "r2",
+      "lineageId": "R2",
+      "version": 1,
+      "parentId": "p1",
+      "createdAt": "2026-01-01"
+    },
+    {
+      "id": "r3",
+      "lineageId": "R3",
+      "version": 1,
+      "parentId": "p1",
+      "createdAt": "2026-01-03"
+    },
+    {
+      "id": "g1",
+      "lineageId": "G",
+      "version": 1,
+      "parentId": "r1",
+      "createdAt": "2026-02-01"
+    }
+  ],
+  "lineageId": "R1",
+  "expected": {
+    "ancestors": ["P"],
+    "siblings": ["R2", "R3"],
+    "children": ["G"]
+  }
+}

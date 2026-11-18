@@ -1,0 +1,47 @@
+{
+  "id": "match-variant-by-class",
+  "kind": "match",
+  "description": "With the class lite wanted, blend-lite is offered in place of its parent blend (same slots, so both would tie); blend-zero is another class and not offered. The lines fit: blend-lite is chosen with distance 0 and offset 0.25, mixup ranks second.",
+  "spec": {
+    "lines": [
+      {
+        "ingredientId": "alpha",
+        "amount": 30,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "spice",
+        "amount": 15,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "water",
+        "amount": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  "expected": {
+    "chosen": {
+      "templateId": "blend-lite",
+      "basis": "suggested",
+      "known": true
+    },
+    "candidates": [
+      {
+        "templateId": "blend-lite",
+        "rank": 1,
+        "fits": true,
+        "distance": 0,
+        "offset": 0.25
+      },
+      {
+        "templateId": "mixup",
+        "rank": 2,
+        "fits": false,
+        "distance": 1
+      }
+    ]
+  },
+  "wanted": "lite"
+}

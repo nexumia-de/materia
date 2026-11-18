@@ -1,0 +1,37 @@
+{
+  "id": "tree-deep",
+  "kind": "tree-queries",
+  "description": "The tree keeps the depth of its source: a type may be below a type, four levels here (spirit, whiskey, bourbon-whiskey, infused-bourbon). A line that names whiskey is satisfied by bourbon-whiskey and by what is below it, but not by a sibling branch; distance counts every step.",
+  "ingredients": [
+    { "id": "spirit", "name": "Spirit", "level": "category", "role": "base" },
+    { "id": "whiskey", "name": "Whiskey", "level": "type", "parentId": "spirit" },
+    { "id": "bourbon-whiskey", "name": "Bourbon whiskey", "level": "type", "parentId": "whiskey" },
+    {
+      "id": "infused-bourbon",
+      "name": "Infused bourbon",
+      "level": "product",
+      "parentId": "bourbon-whiskey"
+    },
+    { "id": "rye", "name": "Rye", "level": "product", "parentId": "whiskey" },
+    { "id": "rum", "name": "Rum", "level": "type", "parentId": "spirit" }
+  ],
+  "expected": {
+    "ancestors": {
+      "infused-bourbon": ["bourbon-whiskey", "whiskey", "spirit"]
+    },
+    "descendants": {
+      "whiskey": ["bourbon-whiskey", "rye", "infused-bourbon"]
+    },
+    "isA": [
+      { "child": "infused-bourbon", "ancestor": "whiskey", "result": true },
+      { "child": "infused-bourbon", "ancestor": "bourbon-whiskey", "result": true },
+      { "child": "rye", "ancestor": "bourbon-whiskey", "result": false },
+      { "child": "infused-bourbon", "ancestor": "rum", "result": false }
+    ],
+    "distance": [
+      { "a": "infused-bourbon", "b": "rye", "result": 3 },
+      { "a": "infused-bourbon", "b": "rum", "result": 4 }
+    ]
+  },
+  "source": "docs/ingredients.md#tree"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "family-missing-parent",
+  "kind": "family",
+  "title": "A parent that is not in the data ends the chain",
+  "specs": [
+    {
+      "id": "x1",
+      "lineageId": "X",
+      "version": 1,
+      "parentId": "gone"
+    }
+  ],
+  "lineageId": "X",
+  "expected": {
+    "ancestors": [],
+    "missingParent": "gone",
+    "siblings": [],
+    "children": []
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "variants-open-slot",
+  "kind": "variants",
+  "description": "Explicit blend with alpha and water only. Replaced lines: alpha (main). Kept: water. blend-lite is offered (class lite); blend-zero is not in the domain's classes. Open slots: main (the replaced role, with the template's note) and accent (required, no kept line has that role); filler is kept and optional.",
+  "spec": {
+    "templateId": "blend",
+    "lines": [
+      {
+        "ingredientId": "alpha",
+        "amount": 30,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "water",
+        "amount": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  "expected": {
+    "templateId": "blend",
+    "variants": [
+      {
+        "templateId": "blend-lite",
+        "replacedLines": [0],
+        "keptLines": [1],
+        "openSlots": [
+          {
+            "slotId": "main",
+            "role": "main",
+            "note": "the lite stand-in"
+          },
+          {
+            "slotId": "accent",
+            "role": "accent"
+          }
+        ]
+      }
+    ]
+  }
+}

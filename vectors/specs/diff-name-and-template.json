@@ -1,0 +1,69 @@
+{
+  "id": "diff-name-and-template",
+  "kind": "diff",
+  "title": "Name and template",
+  "roles": {
+    "rum": "base",
+    "lime": "sour",
+    "syrup": "sweet",
+    "cognac": "base",
+    "lemon": "sour",
+    "honey": "sweet"
+  },
+  "before": {
+    "name": "Daiquiri",
+    "lines": [
+      {
+        "ingredientId": "rum",
+        "amount": 60,
+        "unit": "ml"
+      },
+      {
+        "ingredientId": "lime",
+        "amount": 22.5,
+        "unit": "ml"
+      },
+      {
+        "ingredientId": "syrup",
+        "amount": 15,
+        "unit": "ml"
+      }
+    ]
+  },
+  "after": {
+    "name": "Daiquiri riff",
+    "templateId": "sidecar",
+    "lines": [
+      {
+        "ingredientId": "rum",
+        "amount": 60,
+        "unit": "ml"
+      },
+      {
+        "ingredientId": "lime",
+        "amount": 22.5,
+        "unit": "ml"
+      },
+      {
+        "ingredientId": "syrup",
+        "amount": 15,
+        "unit": "ml"
+      }
+    ]
+  },
+  "expected": {
+    "empty": false,
+    "lines": [],
+    "fields": [
+      {
+        "field": "name",
+        "before": "Daiquiri",
+        "after": "Daiquiri riff"
+      },
+      {
+        "field": "template",
+        "after": "sidecar"
+      }
+    ]
+  }
+}

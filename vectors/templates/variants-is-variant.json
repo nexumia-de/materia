@@ -1,0 +1,30 @@
+{
+  "id": "variants-is-variant",
+  "kind": "variants",
+  "description": "The spec follows a variant already: no variants, reason is-variant.",
+  "spec": {
+    "templateId": "blend-lite",
+    "lines": [
+      {
+        "ingredientId": "alpha",
+        "amount": 30,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "spice",
+        "amount": 15,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "water",
+        "amount": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  "expected": {
+    "templateId": "blend-lite",
+    "variants": [],
+    "reason": "is-variant"
+  }
+}

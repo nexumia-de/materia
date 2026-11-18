@@ -1,0 +1,67 @@
+{
+  "id": "fill-unassigned-lines",
+  "kind": "fill",
+  "description": "plain has no role anywhere, ghost is not in the tree, and a line with the role extra has no slot of that role.",
+  "templateId": "blend",
+  "spec": {
+    "lines": [
+      {
+        "ingredientId": "alpha",
+        "amount": 30,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "plain",
+        "amount": 5,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "ghost",
+        "amount": 5,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "water",
+        "amount": 5,
+        "unit": "g",
+        "role": "extra"
+      }
+    ]
+  },
+  "expected": {
+    "fills": [
+      {
+        "slotId": "main",
+        "lineIndexes": [0],
+        "ml": 30
+      },
+      {
+        "slotId": "accent",
+        "lineIndexes": []
+      },
+      {
+        "slotId": "filler",
+        "lineIndexes": []
+      }
+    ],
+    "unassigned": [
+      {
+        "index": 1,
+        "ingredientId": "plain",
+        "reason": "unknown-role"
+      },
+      {
+        "index": 2,
+        "ingredientId": "ghost",
+        "reason": "unknown-ingredient"
+      },
+      {
+        "index": 3,
+        "ingredientId": "water",
+        "reason": "no-slot-for-role"
+      }
+    ],
+    "emptyRequired": ["accent"],
+    "emptyOptional": ["filler"]
+  }
+}

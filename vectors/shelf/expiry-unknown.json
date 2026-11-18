@@ -1,0 +1,92 @@
+{
+  "id": "expiry-unknown",
+  "kind": "expiry",
+  "description": "No shelf life entered, a date that is not a real date, a shelf life that is not whole days: status unknown with the reason; nothing is guessed.",
+  "cases": [
+    {
+      "name": "no shelf life entered",
+      "input": {
+        "madeOn": "2026-11-01",
+        "today": "2026-11-10"
+      },
+      "expected": {
+        "status": "unknown",
+        "reason": "no-shelf-life"
+      }
+    },
+    {
+      "name": "a made-on date that does not exist",
+      "input": {
+        "madeOn": "2026-02-30",
+        "today": "2026-11-10",
+        "shelfLifeDays": 14
+      },
+      "expected": {
+        "status": "unknown",
+        "reason": "invalid-date"
+      }
+    },
+    {
+      "name": "a made-on date in another format",
+      "input": {
+        "madeOn": "11/01/2026",
+        "today": "2026-11-10",
+        "shelfLifeDays": 14
+      },
+      "expected": {
+        "status": "unknown",
+        "reason": "invalid-date"
+      }
+    },
+    {
+      "name": "today is not a date",
+      "input": {
+        "madeOn": "2026-11-01",
+        "today": "soon",
+        "shelfLifeDays": 14
+      },
+      "expected": {
+        "status": "unknown",
+        "reason": "invalid-date"
+      }
+    },
+    {
+      "name": "negative shelf life",
+      "input": {
+        "madeOn": "2026-11-01",
+        "today": "2026-11-10",
+        "shelfLifeDays": -1
+      },
+      "expected": {
+        "status": "unknown",
+        "reason": "invalid-shelf-life"
+      }
+    },
+    {
+      "name": "shelf life in fractions of a day",
+      "input": {
+        "madeOn": "2026-11-01",
+        "today": "2026-11-10",
+        "shelfLifeDays": 2.5
+      },
+      "expected": {
+        "status": "unknown",
+        "reason": "invalid-shelf-life"
+      }
+    },
+    {
+      "name": "unknown keeps the limiting ingredient",
+      "input": {
+        "madeOn": "2026-11-01",
+        "today": "2026-11-10",
+        "limitingId": "syrup"
+      },
+      "expected": {
+        "status": "unknown",
+        "reason": "no-shelf-life",
+        "limitingId": "syrup"
+      }
+    }
+  ],
+  "source": "docs/non-alcoholic.md#shelf-life-with-entered-dates; dates are worked out on a calendar by hand; the use-soon window of 2 days is an assumption, unverified, and every shelf life is a synthetic number the user would enter, not drink data"
+}

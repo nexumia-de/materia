@@ -1,0 +1,9 @@
+{
+  "id": "riff-change-name-ignored",
+  "kind": "riff-change",
+  "title": "A different name is not a change of a riff; the template is",
+  "diffFrom": "diff-name-and-template",
+  "expected": {
+    "count": 1
+  }
+}

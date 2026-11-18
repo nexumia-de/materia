@@ -1,0 +1,46 @@
+{
+  "id": "fill-same-role-lines-add-up",
+  "kind": "fill",
+  "description": "Two main lines (alpha 20 through the inherited role, beta 10) share the main slot and add to 30.",
+  "templateId": "blend",
+  "spec": {
+    "lines": [
+      {
+        "ingredientId": "alpha",
+        "amount": 20,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "beta",
+        "amount": 10,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "spice",
+        "amount": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  "expected": {
+    "fills": [
+      {
+        "slotId": "main",
+        "lineIndexes": [0, 1],
+        "ml": 30
+      },
+      {
+        "slotId": "accent",
+        "lineIndexes": [2],
+        "ml": 15
+      },
+      {
+        "slotId": "filler",
+        "lineIndexes": []
+      }
+    ],
+    "unassigned": [],
+    "emptyRequired": [],
+    "emptyOptional": ["filler"]
+  }
+}

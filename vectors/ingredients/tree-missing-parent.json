@@ -1,0 +1,27 @@
+{
+  "id": "tree-missing-parent",
+  "kind": "tree-errors",
+  "description": "rye points at whiskey, which is not in the list: the error names the child and the missing parent.",
+  "ingredients": [
+    {
+      "id": "spirit",
+      "name": "spirit",
+      "level": "category"
+    },
+    {
+      "id": "rye",
+      "name": "Rye",
+      "level": "product",
+      "parentId": "whiskey"
+    }
+  ],
+  "expected": {
+    "errors": [
+      {
+        "code": "missing-parent",
+        "ids": ["rye", "whiskey"]
+      }
+    ]
+  },
+  "source": "docs/data-model.md#ingredient"
+}

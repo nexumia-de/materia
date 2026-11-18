@@ -1,0 +1,56 @@
+{
+  "id": "match-below-range",
+  "kind": "match",
+  "description": "spice 6 against alpha 30 is 0.6 parts, below the band 1-2 by (1-0.6)/1 = 0.4: blend has distance 0.4.",
+  "spec": {
+    "lines": [
+      {
+        "ingredientId": "alpha",
+        "amount": 30,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "spice",
+        "amount": 6,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "water",
+        "amount": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  "expected": {
+    "candidates": [
+      {
+        "templateId": "blend",
+        "rank": 1,
+        "fits": false,
+        "distance": 0.4,
+        "ratios": [
+          {
+            "slotId": "main",
+            "status": "reference",
+            "parts": 3
+          },
+          {
+            "slotId": "accent",
+            "status": "below",
+            "parts": 0.6
+          },
+          {
+            "slotId": "filler",
+            "status": "within",
+            "parts": 1.5
+          }
+        ]
+      },
+      {
+        "templateId": "mixup",
+        "rank": 2,
+        "distance": 1
+      }
+    ]
+  }
+}

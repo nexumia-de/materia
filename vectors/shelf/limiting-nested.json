@@ -1,0 +1,234 @@
+{
+  "id": "limiting-nested",
+  "kind": "limiting",
+  "description": "Prepared ingredients made from prepared ingredients: the shortest of the user's own values wins and names its ingredient. Raw parts have no shelf life and say nothing; a prepared ingredient with no value anywhere is unknown.",
+  "ingredients": [
+    {
+      "id": "sugar",
+      "name": "Sugar",
+      "level": "product"
+    },
+    {
+      "id": "lemon",
+      "name": "Lemon juice",
+      "level": "product"
+    },
+    {
+      "id": "syrup",
+      "name": "Syrup",
+      "level": "product",
+      "shelfLifeDays": 14,
+      "prepared": {
+        "specId": "spec-syrup",
+        "yield": {
+          "amount": 100,
+          "unit": "ml"
+        }
+      }
+    },
+    {
+      "id": "cordial",
+      "name": "Cordial",
+      "level": "product",
+      "shelfLifeDays": 30,
+      "prepared": {
+        "specId": "spec-cordial",
+        "yield": {
+          "amount": 100,
+          "unit": "ml"
+        }
+      }
+    },
+    {
+      "id": "tonic",
+      "name": "Tonic base",
+      "level": "product",
+      "prepared": {
+        "specId": "spec-tonic",
+        "yield": {
+          "amount": 100,
+          "unit": "ml"
+        }
+      }
+    },
+    {
+      "id": "tie",
+      "name": "Tie",
+      "level": "product",
+      "shelfLifeDays": 14,
+      "prepared": {
+        "specId": "spec-tie",
+        "yield": {
+          "amount": 100,
+          "unit": "ml"
+        }
+      }
+    },
+    {
+      "id": "plain",
+      "name": "Plain infusion",
+      "level": "product",
+      "prepared": {
+        "specId": "spec-plain",
+        "yield": {
+          "amount": 100,
+          "unit": "ml"
+        }
+      }
+    },
+    {
+      "id": "loop-a",
+      "name": "Loop A",
+      "level": "product",
+      "shelfLifeDays": 5,
+      "prepared": {
+        "specId": "spec-loop-a",
+        "yield": {
+          "amount": 100,
+          "unit": "ml"
+        }
+      }
+    },
+    {
+      "id": "loop-b",
+      "name": "Loop B",
+      "level": "product",
+      "shelfLifeDays": 7,
+      "prepared": {
+        "specId": "spec-loop-b",
+        "yield": {
+          "amount": 100,
+          "unit": "ml"
+        }
+      }
+    }
+  ],
+  "specs": {
+    "spec-syrup": {
+      "lines": [
+        {
+          "ingredientId": "sugar",
+          "ml": 100
+        }
+      ]
+    },
+    "spec-cordial": {
+      "lines": [
+        {
+          "ingredientId": "syrup",
+          "ml": 50
+        },
+        {
+          "ingredientId": "lemon",
+          "ml": 50
+        }
+      ]
+    },
+    "spec-tonic": {
+      "lines": [
+        {
+          "ingredientId": "cordial",
+          "ml": 80
+        },
+        {
+          "ingredientId": "lemon",
+          "ml": 20
+        }
+      ]
+    },
+    "spec-tie": {
+      "lines": [
+        {
+          "ingredientId": "syrup",
+          "ml": 100
+        }
+      ]
+    },
+    "spec-plain": {
+      "lines": [
+        {
+          "ingredientId": "lemon",
+          "ml": 100
+        }
+      ]
+    },
+    "spec-loop-a": {
+      "lines": [
+        {
+          "ingredientId": "loop-b",
+          "ml": 100
+        }
+      ]
+    },
+    "spec-loop-b": {
+      "lines": [
+        {
+          "ingredientId": "loop-a",
+          "ml": 100
+        }
+      ]
+    }
+  },
+  "cases": [
+    {
+      "name": "one level: its own value",
+      "id": "syrup",
+      "expected": {
+        "known": true,
+        "days": 14,
+        "limitingId": "syrup"
+      }
+    },
+    {
+      "name": "own 30 days, made from a 14-day syrup: the syrup limits",
+      "id": "cordial",
+      "expected": {
+        "known": true,
+        "days": 14,
+        "limitingId": "syrup"
+      }
+    },
+    {
+      "name": "no own value, two levels down: the syrup limits",
+      "id": "tonic",
+      "expected": {
+        "known": true,
+        "days": 14,
+        "limitingId": "syrup"
+      }
+    },
+    {
+      "name": "a tie goes to the outer ingredient",
+      "id": "tie",
+      "expected": {
+        "known": true,
+        "days": 14,
+        "limitingId": "tie"
+      }
+    },
+    {
+      "name": "no value on it or inside it: unknown",
+      "id": "plain",
+      "expected": {
+        "known": false
+      }
+    },
+    {
+      "name": "a raw ingredient has none",
+      "id": "lemon",
+      "expected": {
+        "known": false
+      }
+    },
+    {
+      "name": "a cycle ends: the shorter of the two",
+      "id": "loop-a",
+      "expected": {
+        "known": true,
+        "days": 5,
+        "limitingId": "loop-a"
+      }
+    }
+  ],
+  "source": "docs/non-alcoholic.md#shelf-life-with-entered-dates; dates are worked out on a calendar by hand; the use-soon window of 2 days is an assumption, unverified, and every shelf life is a synthetic number the user would enter, not drink data"
+}

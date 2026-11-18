@@ -1,0 +1,30 @@
+{
+  "id": "variants-no-variant",
+  "kind": "variants",
+  "description": "mixup has no variant: reason no-variant.",
+  "spec": {
+    "templateId": "mixup",
+    "lines": [
+      {
+        "ingredientId": "alpha",
+        "amount": 30,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "spice",
+        "amount": 15,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "water",
+        "amount": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  "expected": {
+    "templateId": "mixup",
+    "variants": [],
+    "reason": "no-variant"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "riff-change-two",
+  "kind": "riff-change",
+  "title": "Two changes: a line added and a line removed",
+  "diffFrom": "diff-added-removed",
+  "expected": {
+    "count": 2
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": "tree-duplicate-id",
+  "kind": "tree-errors",
+  "description": "Two ingredients share the id gin: the tree is rejected and the error names gin.",
+  "ingredients": [
+    {
+      "id": "spirit",
+      "name": "spirit",
+      "level": "category"
+    },
+    {
+      "id": "gin",
+      "name": "Gin",
+      "level": "type",
+      "parentId": "spirit"
+    },
+    {
+      "id": "gin",
+      "name": "Other gin",
+      "level": "type",
+      "parentId": "spirit"
+    }
+  ],
+  "expected": {
+    "errors": [
+      {
+        "code": "duplicate-id",
+        "ids": ["gin"]
+      }
+    ]
+  },
+  "source": "docs/data-model.md#ingredient"
+}

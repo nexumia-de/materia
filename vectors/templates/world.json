@@ -1,0 +1,153 @@
+{
+  "description": "Neutral domain for the template vectors. Roles: main, accent, filler. The measure of a line is its amount; a line in the unit `count` has no measure. Reference slot: main (middle of its band: 3 parts). Variant class: the `klass` field of a template; the variant domain offers the class `lite`.",
+  "ingredients": [
+    {
+      "id": "item",
+      "name": "Item",
+      "level": "category"
+    },
+    {
+      "id": "grain",
+      "name": "Grain",
+      "level": "type",
+      "parentId": "item",
+      "role": "main"
+    },
+    {
+      "id": "alpha",
+      "name": "Alpha",
+      "level": "product",
+      "parentId": "grain"
+    },
+    {
+      "id": "beta",
+      "name": "Beta",
+      "level": "product",
+      "parentId": "grain"
+    },
+    {
+      "id": "spice",
+      "name": "Spice",
+      "level": "type",
+      "parentId": "item",
+      "role": "accent"
+    },
+    {
+      "id": "water",
+      "name": "Water",
+      "level": "type",
+      "parentId": "item",
+      "role": "filler"
+    },
+    {
+      "id": "plain",
+      "name": "Plain",
+      "level": "type",
+      "parentId": "item"
+    }
+  ],
+  "templates": [
+    {
+      "id": "blend",
+      "name": "Blend",
+      "method": "mix",
+      "slots": [
+        {
+          "id": "main",
+          "role": "main",
+          "minParts": 2,
+          "maxParts": 4
+        },
+        {
+          "id": "accent",
+          "role": "accent",
+          "minParts": 1,
+          "maxParts": 2
+        },
+        {
+          "id": "filler",
+          "role": "filler",
+          "minParts": 1,
+          "maxParts": 3,
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "blend-lite",
+      "name": "Blend Lite",
+      "parentId": "blend",
+      "klass": "lite",
+      "method": "mix",
+      "slots": [
+        {
+          "id": "main",
+          "role": "main",
+          "minParts": 2,
+          "maxParts": 4,
+          "note": "the lite stand-in"
+        },
+        {
+          "id": "accent",
+          "role": "accent",
+          "minParts": 1,
+          "maxParts": 2
+        },
+        {
+          "id": "filler",
+          "role": "filler",
+          "minParts": 1,
+          "maxParts": 3,
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "blend-zero",
+      "name": "Blend Zero",
+      "parentId": "blend",
+      "klass": "zero",
+      "method": "mix",
+      "slots": [
+        {
+          "id": "main",
+          "role": "main",
+          "minParts": 2,
+          "maxParts": 4
+        },
+        {
+          "id": "accent",
+          "role": "accent",
+          "minParts": 1,
+          "maxParts": 2
+        },
+        {
+          "id": "filler",
+          "role": "filler",
+          "minParts": 1,
+          "maxParts": 3,
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "mixup",
+      "name": "Mixup",
+      "method": "mix",
+      "slots": [
+        {
+          "id": "main",
+          "role": "main",
+          "minParts": 1,
+          "maxParts": 2
+        },
+        {
+          "id": "filler",
+          "role": "filler",
+          "minParts": 1,
+          "maxParts": 2
+        }
+      ]
+    }
+  ]
+}

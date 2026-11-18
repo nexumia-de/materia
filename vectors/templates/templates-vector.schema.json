@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Template vector",
+  "description": "One worked example on the neutral domain of world.json. kind selects the function: match (matchTemplates), fill (fillSlots), variants (findVariants).",
+  "type": "object",
+  "required": ["id", "kind", "description", "spec", "expected"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "kind": {
+      "enum": ["match", "fill", "variants"]
+    },
+    "description": {
+      "type": "string"
+    },
+    "spec": {
+      "type": "object",
+      "required": ["lines"]
+    },
+    "wanted": {
+      "type": "string"
+    },
+    "templateId": {
+      "type": "string"
+    },
+    "expected": {
+      "type": "object"
+    }
+  }
+}

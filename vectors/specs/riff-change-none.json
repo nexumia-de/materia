@@ -1,0 +1,9 @@
+{
+  "id": "riff-change-none",
+  "kind": "riff-change",
+  "title": "Identical riff and parent: no changes",
+  "diffFrom": "diff-identical",
+  "expected": {
+    "count": 0
+  }
+}

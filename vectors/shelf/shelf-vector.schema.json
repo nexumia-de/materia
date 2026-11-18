@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Vector for the shelf module (docs/non-alcoholic.md#shelf-life-with-entered-dates)",
+  "type": "object",
+  "required": ["id", "kind", "description", "source", "cases"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "kind": {
+      "enum": ["expiry", "limiting"]
+    },
+    "description": {
+      "type": "string",
+      "pattern": "."
+    },
+    "source": {
+      "type": "string",
+      "pattern": "."
+    },
+    "ingredients": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "specs": {
+      "type": "object"
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "expected"]
+      }
+    }
+  }
+}

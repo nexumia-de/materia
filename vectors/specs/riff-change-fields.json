@@ -1,0 +1,9 @@
+{
+  "id": "riff-change-fields",
+  "kind": "riff-change",
+  "title": "Fields count too",
+  "diffFrom": "diff-method-glass-garnish-notes",
+  "expected": {
+    "count": 2
+  }
+}

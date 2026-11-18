@@ -1,0 +1,41 @@
+{
+  "id": "variants-fitting-spec",
+  "kind": "variants",
+  "description": "A spec that fits blend by ratios (no explicit id): the same variant, with only the replaced slot open because spice and water are kept.",
+  "spec": {
+    "lines": [
+      {
+        "ingredientId": "alpha",
+        "amount": 30,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "spice",
+        "amount": 15,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "water",
+        "amount": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  "expected": {
+    "templateId": "blend",
+    "variants": [
+      {
+        "templateId": "blend-lite",
+        "replacedLines": [0],
+        "keptLines": [1, 2],
+        "openSlots": [
+          {
+            "slotId": "main",
+            "role": "main",
+            "note": "the lite stand-in"
+          }
+        ]
+      }
+    ]
+  }
+}

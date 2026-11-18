@@ -1,0 +1,279 @@
+{
+  "id": "pairs-twins-and-limit",
+  "kind": "pairs",
+  "description": "Brands that make exactly the same specs as their type are listed under the type (gin-b under gin); gin-a is needed by r2 and keeps its own rows. `limit` cuts the list and `total` still counts all qualifying pairs.",
+  "ingredients": [
+    {
+      "id": "spirit",
+      "name": "spirit",
+      "level": "category",
+      "role": "base"
+    },
+    {
+      "id": "gin",
+      "name": "gin",
+      "level": "type",
+      "parentId": "spirit",
+      "substitutionClass": "gin-like"
+    },
+    {
+      "id": "gin-a",
+      "name": "gin-a",
+      "level": "product",
+      "parentId": "gin"
+    },
+    {
+      "id": "gin-b",
+      "name": "gin-b",
+      "level": "product",
+      "parentId": "gin"
+    },
+    {
+      "id": "vodka",
+      "name": "vodka",
+      "level": "type",
+      "parentId": "spirit",
+      "substitutionClass": "gin-like"
+    },
+    {
+      "id": "vodka-a",
+      "name": "vodka-a",
+      "level": "product",
+      "parentId": "vodka"
+    },
+    {
+      "id": "amaro",
+      "name": "amaro",
+      "level": "type",
+      "parentId": "spirit"
+    },
+    {
+      "id": "amaro-a",
+      "name": "amaro-a",
+      "level": "product",
+      "parentId": "amaro"
+    },
+    {
+      "id": "citrus",
+      "name": "citrus",
+      "level": "category",
+      "role": "sour"
+    },
+    {
+      "id": "lemon",
+      "name": "lemon",
+      "level": "type",
+      "parentId": "citrus"
+    },
+    {
+      "id": "sweetener",
+      "name": "sweetener",
+      "level": "category",
+      "role": "sweet"
+    },
+    {
+      "id": "sugar",
+      "name": "sugar",
+      "level": "type",
+      "parentId": "sweetener"
+    },
+    {
+      "id": "simple-syrup",
+      "name": "simple-syrup",
+      "level": "type",
+      "parentId": "sweetener",
+      "prepared": {
+        "specId": "prep-syrup",
+        "yield": {
+          "amount": 500,
+          "unit": "ml"
+        }
+      }
+    },
+    {
+      "id": "water",
+      "name": "water",
+      "level": "category",
+      "role": "lengthener"
+    },
+    {
+      "id": "bitters",
+      "name": "bitters",
+      "level": "category",
+      "role": "accent"
+    },
+    {
+      "id": "angostura",
+      "name": "angostura",
+      "level": "type",
+      "parentId": "bitters"
+    }
+  ],
+  "specs": [
+    {
+      "id": "r1",
+      "status": "on-menu",
+      "lines": [
+        {
+          "ingredientId": "gin",
+          "amount": 30,
+          "unit": "ml"
+        },
+        {
+          "ingredientId": "lemon",
+          "amount": 30,
+          "unit": "ml"
+        }
+      ]
+    },
+    {
+      "id": "r2",
+      "status": "on-menu",
+      "lines": [
+        {
+          "ingredientId": "gin-a",
+          "amount": 30,
+          "unit": "ml"
+        },
+        {
+          "ingredientId": "sugar",
+          "amount": 30,
+          "unit": "ml"
+        }
+      ]
+    },
+    {
+      "id": "r3",
+      "status": "on-menu",
+      "lines": [
+        {
+          "ingredientId": "amaro-a",
+          "amount": 30,
+          "unit": "ml"
+        },
+        {
+          "ingredientId": "angostura",
+          "amount": 30,
+          "unit": "ml"
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "stock": [],
+      "options": {
+        "limit": 2
+      },
+      "expected": {
+        "mode": "strict",
+        "total": 4,
+        "ranking": [
+          {
+            "first": "amaro-a",
+            "second": "angostura",
+            "firstKind": "product",
+            "secondKind": "type",
+            "unlocks": ["r3"],
+            "count": 1,
+            "byFirst": [],
+            "bySecond": [],
+            "together": ["r3"],
+            "templates": 0,
+            "stockDistance": null,
+            "alsoByFirst": [],
+            "alsoBySecond": []
+          },
+          {
+            "first": "gin",
+            "second": "lemon",
+            "firstKind": "type",
+            "secondKind": "type",
+            "unlocks": ["r1"],
+            "count": 1,
+            "byFirst": [],
+            "bySecond": [],
+            "together": ["r1"],
+            "templates": 0,
+            "stockDistance": null,
+            "alsoByFirst": ["gin-b"],
+            "alsoBySecond": []
+          }
+        ]
+      }
+    },
+    {
+      "stock": [],
+      "options": {
+        "limit": 10
+      },
+      "expected": {
+        "mode": "strict",
+        "total": 4,
+        "ranking": [
+          {
+            "first": "amaro-a",
+            "second": "angostura",
+            "firstKind": "product",
+            "secondKind": "type",
+            "unlocks": ["r3"],
+            "count": 1,
+            "byFirst": [],
+            "bySecond": [],
+            "together": ["r3"],
+            "templates": 0,
+            "stockDistance": null,
+            "alsoByFirst": [],
+            "alsoBySecond": []
+          },
+          {
+            "first": "gin",
+            "second": "lemon",
+            "firstKind": "type",
+            "secondKind": "type",
+            "unlocks": ["r1"],
+            "count": 1,
+            "byFirst": [],
+            "bySecond": [],
+            "together": ["r1"],
+            "templates": 0,
+            "stockDistance": null,
+            "alsoByFirst": ["gin-b"],
+            "alsoBySecond": []
+          },
+          {
+            "first": "gin-a",
+            "second": "lemon",
+            "firstKind": "product",
+            "secondKind": "type",
+            "unlocks": ["r1"],
+            "count": 1,
+            "byFirst": [],
+            "bySecond": [],
+            "together": ["r1"],
+            "templates": 0,
+            "stockDistance": null,
+            "alsoByFirst": [],
+            "alsoBySecond": []
+          },
+          {
+            "first": "gin-a",
+            "second": "sugar",
+            "firstKind": "product",
+            "secondKind": "type",
+            "unlocks": ["r2"],
+            "count": 1,
+            "byFirst": [],
+            "bySecond": [],
+            "together": ["r2"],
+            "templates": 0,
+            "stockDistance": null,
+            "alsoByFirst": [],
+            "alsoBySecond": []
+          }
+        ]
+      }
+    }
+  ],
+  "source": "synthetic fixture, expected values worked out by hand from docs/makeable.md"
+}

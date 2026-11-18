@@ -1,0 +1,67 @@
+{
+  "id": "diff-duplicate-ingredient",
+  "kind": "diff",
+  "title": "Two lines of the same ingredient match one to one",
+  "roles": {
+    "rum": "base",
+    "lime": "sour",
+    "syrup": "sweet",
+    "cognac": "base",
+    "lemon": "sour",
+    "honey": "sweet"
+  },
+  "before": {
+    "lines": [
+      {
+        "ingredientId": "rum",
+        "amount": 30,
+        "unit": "ml"
+      },
+      {
+        "ingredientId": "rum",
+        "amount": 30,
+        "unit": "ml"
+      },
+      {
+        "ingredientId": "lime",
+        "amount": 22.5,
+        "unit": "ml"
+      }
+    ]
+  },
+  "after": {
+    "lines": [
+      {
+        "ingredientId": "rum",
+        "amount": 30,
+        "unit": "ml"
+      },
+      {
+        "ingredientId": "rum",
+        "amount": 45,
+        "unit": "ml"
+      },
+      {
+        "ingredientId": "lime",
+        "amount": 22.5,
+        "unit": "ml"
+      }
+    ]
+  },
+  "expected": {
+    "empty": false,
+    "lines": [
+      {
+        "kind": "changed",
+        "fields": ["amount"],
+        "before": {
+          "amount": 30
+        },
+        "after": {
+          "amount": 45
+        }
+      }
+    ],
+    "fields": []
+  }
+}

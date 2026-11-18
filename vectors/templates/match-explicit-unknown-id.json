@@ -1,0 +1,33 @@
+{
+  "id": "match-explicit-unknown-id",
+  "kind": "match",
+  "description": "An explicit id that names no template is kept and reported unknown; there are no candidates.",
+  "spec": {
+    "templateId": "nope",
+    "lines": [
+      {
+        "ingredientId": "alpha",
+        "amount": 30,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "spice",
+        "amount": 15,
+        "unit": "g"
+      },
+      {
+        "ingredientId": "water",
+        "amount": 15,
+        "unit": "g"
+      }
+    ]
+  },
+  "expected": {
+    "chosen": {
+      "templateId": "nope",
+      "basis": "explicit",
+      "known": false
+    },
+    "candidates": []
+  }
+}

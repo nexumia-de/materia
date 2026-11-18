@@ -1,0 +1,35 @@
+{
+  "id": "fill-empty-slots",
+  "kind": "fill",
+  "description": "Only alpha: the required accent slot and the optional filler slot are empty; alpha fills main with 30.",
+  "templateId": "blend",
+  "spec": {
+    "lines": [
+      {
+        "ingredientId": "alpha",
+        "amount": 30,
+        "unit": "g"
+      }
+    ]
+  },
+  "expected": {
+    "fills": [
+      {
+        "slotId": "main",
+        "lineIndexes": [0],
+        "ml": 30
+      },
+      {
+        "slotId": "accent",
+        "lineIndexes": []
+      },
+      {
+        "slotId": "filler",
+        "lineIndexes": []
+      }
+    ],
+    "unassigned": [],
+    "emptyRequired": ["accent"],
+    "emptyOptional": ["filler"]
+  }
+}

@@ -1,0 +1,347 @@
+{
+  "id": "unlock-single-winner",
+  "kind": "unlock",
+  "description": "One ingredient unlocks two specs, another one; a spec missing two ingredients is not counted and is listed as needing more; a type does not unlock a spec that asks for a product. withSubstitution shows what the same ingredient would add if substitutes were allowed (dry and sweet vermouth share a class).",
+  "ingredients": [
+    {
+      "id": "spirit",
+      "name": "spirit",
+      "level": "category",
+      "role": "base"
+    },
+    {
+      "id": "gin",
+      "name": "gin",
+      "level": "type",
+      "parentId": "spirit",
+      "substitutionClass": "gin-like"
+    },
+    {
+      "id": "gin-a",
+      "name": "gin-a",
+      "level": "product",
+      "parentId": "gin"
+    },
+    {
+      "id": "gin-b",
+      "name": "gin-b",
+      "level": "product",
+      "parentId": "gin"
+    },
+    {
+      "id": "vodka",
+      "name": "vodka",
+      "level": "type",
+      "parentId": "spirit",
+      "substitutionClass": "neutral"
+    },
+    {
+      "id": "vodka-a",
+      "name": "vodka-a",
+      "level": "product",
+      "parentId": "vodka"
+    },
+    {
+      "id": "amaro",
+      "name": "amaro",
+      "level": "type",
+      "parentId": "spirit",
+      "substitutionClass": "amaro"
+    },
+    {
+      "id": "amaro-a",
+      "name": "amaro-a",
+      "level": "product",
+      "parentId": "amaro"
+    },
+    {
+      "id": "vermouth",
+      "name": "vermouth",
+      "level": "category",
+      "role": "modifier",
+      "substitutionClass": "vermouth"
+    },
+    {
+      "id": "dry-vermouth",
+      "name": "dry-vermouth",
+      "level": "type",
+      "parentId": "vermouth"
+    },
+    {
+      "id": "dry-v-a",
+      "name": "dry-v-a",
+      "level": "product",
+      "parentId": "dry-vermouth"
+    },
+    {
+      "id": "dry-v-b",
+      "name": "dry-v-b",
+      "level": "product",
+      "parentId": "dry-vermouth"
+    },
+    {
+      "id": "sweet-vermouth",
+      "name": "sweet-vermouth",
+      "level": "type",
+      "parentId": "vermouth"
+    },
+    {
+      "id": "sweet-v-a",
+      "name": "sweet-v-a",
+      "level": "product",
+      "parentId": "sweet-vermouth"
+    },
+    {
+      "id": "citrus-juice",
+      "name": "citrus-juice",
+      "level": "category",
+      "role": "sour",
+      "substitutionClass": "citrus"
+    },
+    {
+      "id": "lemon-juice",
+      "name": "lemon-juice",
+      "level": "type",
+      "parentId": "citrus-juice"
+    },
+    {
+      "id": "lime-juice",
+      "name": "lime-juice",
+      "level": "type",
+      "parentId": "citrus-juice"
+    },
+    {
+      "id": "sweetener",
+      "name": "sweetener",
+      "level": "category",
+      "role": "sweet"
+    },
+    {
+      "id": "sugar",
+      "name": "sugar",
+      "level": "type",
+      "parentId": "sweetener"
+    },
+    {
+      "id": "simple-syrup",
+      "name": "simple-syrup",
+      "level": "type",
+      "parentId": "sweetener",
+      "prepared": {
+        "specId": "prep-simple-syrup",
+        "yield": {
+          "amount": 500,
+          "unit": "ml"
+        }
+      }
+    },
+    {
+      "id": "rich-syrup",
+      "name": "rich-syrup",
+      "level": "type",
+      "parentId": "sweetener",
+      "prepared": {
+        "specId": "prep-rich-syrup",
+        "yield": {
+          "amount": 500,
+          "unit": "ml"
+        }
+      }
+    },
+    {
+      "id": "water",
+      "name": "water",
+      "level": "category",
+      "role": "lengthener"
+    },
+    {
+      "id": "olive",
+      "name": "olive",
+      "level": "category",
+      "role": "accent"
+    },
+    {
+      "id": "fruit",
+      "name": "fruit",
+      "level": "category",
+      "role": "accent"
+    },
+    {
+      "id": "lime",
+      "name": "lime",
+      "level": "type",
+      "parentId": "fruit"
+    },
+    {
+      "id": "soda",
+      "name": "soda",
+      "level": "category",
+      "role": "lengthener"
+    },
+    {
+      "id": "bitters",
+      "name": "bitters",
+      "level": "category",
+      "role": "accent"
+    },
+    {
+      "id": "angostura",
+      "name": "angostura",
+      "level": "type",
+      "parentId": "bitters"
+    },
+    {
+      "id": "cyclic",
+      "name": "cyclic",
+      "level": "category",
+      "role": "modifier"
+    },
+    {
+      "id": "cyc-a",
+      "name": "cyc-a",
+      "level": "type",
+      "parentId": "cyclic",
+      "prepared": {
+        "specId": "prep-cyc-a",
+        "yield": {
+          "amount": 500,
+          "unit": "ml"
+        }
+      }
+    },
+    {
+      "id": "cyc-b",
+      "name": "cyc-b",
+      "level": "type",
+      "parentId": "cyclic",
+      "prepared": {
+        "specId": "prep-cyc-b",
+        "yield": {
+          "amount": 500,
+          "unit": "ml"
+        }
+      }
+    }
+  ],
+  "specs": [
+    {
+      "id": "a1",
+      "status": "on-menu",
+      "lines": [
+        {
+          "ingredientId": "gin-a",
+          "amount": 30,
+          "unit": "ml"
+        },
+        {
+          "ingredientId": "dry-v-a",
+          "amount": 30,
+          "unit": "ml"
+        }
+      ]
+    },
+    {
+      "id": "a2",
+      "status": "on-menu",
+      "lines": [
+        {
+          "ingredientId": "gin-a",
+          "amount": 30,
+          "unit": "ml"
+        },
+        {
+          "ingredientId": "dry-v-a",
+          "amount": 30,
+          "unit": "ml"
+        },
+        {
+          "ingredientId": "angostura",
+          "amount": 2,
+          "unit": "dash",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "a3",
+      "status": "on-menu",
+      "lines": [
+        {
+          "ingredientId": "gin-a",
+          "amount": 30,
+          "unit": "ml"
+        },
+        {
+          "ingredientId": "sweet-v-a",
+          "amount": 30,
+          "unit": "ml"
+        }
+      ]
+    },
+    {
+      "id": "a4",
+      "status": "on-menu",
+      "lines": [
+        {
+          "ingredientId": "gin-a",
+          "amount": 30,
+          "unit": "ml"
+        },
+        {
+          "ingredientId": "dry-v-a",
+          "amount": 30,
+          "unit": "ml"
+        },
+        {
+          "ingredientId": "lemon-juice",
+          "amount": 30,
+          "unit": "ml"
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "stock": [
+        {
+          "ingredientId": "gin-a",
+          "present": true
+        }
+      ],
+      "options": {},
+      "expected": {
+        "mode": "strict",
+        "ranking": [
+          {
+            "ingredientId": "dry-v-a",
+            "kind": "product",
+            "unlocks": ["a1", "a2"],
+            "count": 2,
+            "strict": ["a1", "a2"],
+            "withSubstitution": ["a3"],
+            "alsoBy": [],
+            "stockDistance": 6
+          },
+          {
+            "ingredientId": "sweet-v-a",
+            "kind": "product",
+            "unlocks": ["a3"],
+            "count": 1,
+            "strict": ["a3"],
+            "withSubstitution": ["a1", "a2"],
+            "stockDistance": 6
+          }
+        ],
+        "needsMore": [
+          {
+            "specId": "a4",
+            "missing": ["dry-v-a", "lemon-juice"],
+            "count": 2
+          }
+        ],
+        "unknown": []
+      }
+    }
+  ],
+  "source": "synthetic fixture, expected values worked out by hand from docs/makeable.md"
+}
